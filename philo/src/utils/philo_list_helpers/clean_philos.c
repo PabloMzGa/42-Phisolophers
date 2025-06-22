@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:15:24 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/19 20:49:20 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:51:44 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 void	clean_philos(t_philo **philo)
 {
 	t_philo	*tmp_philo;
-	t_philo *next_philo;
+	t_philo	*next_philo;
 
 	if (!philo || !*philo)
-		return;
+		return ;
 	if ((*philo)->previous)
 		(*philo)->previous->next = NULL;
 	tmp_philo = *philo;

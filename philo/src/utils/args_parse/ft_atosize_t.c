@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 14:23:00 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/19 13:11:45 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:51:31 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,5 +28,5 @@ size_t	ft_atosize_t(const char *nptr)
 		output = output * 10 + *nptr - '0';
 		++nptr;
 	}
-	return (output );
+	return (output);
 }

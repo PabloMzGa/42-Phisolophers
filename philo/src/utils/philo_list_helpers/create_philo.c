@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/20 00:15:16 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/22 23:51:39 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 
 #include "philosophers.h"
 
-
 t_philo	*create_philo(size_t id, t_args *args)
 {
 	t_philo	*philo;
@@ -37,7 +36,8 @@ t_philo	*create_philo(size_t id, t_args *args)
 	philo->id = id;
 	philo->n_eat = 0;
 	philo->args = args;
-	philo->status = ALIVE;
+	philo->status = HUNGRY;
+	philo->last_meal_timestamp = get_time_ms();
 	// TODO: Comprobar que no falle
 	pthread_mutex_init(&philo->mutex, NULL);
 	return (philo);

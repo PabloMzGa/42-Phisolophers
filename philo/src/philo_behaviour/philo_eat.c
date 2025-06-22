@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/20 00:20:11 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/23 00:38:49 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,8 @@
  * @param[in]  philo        Pointer to the philosopher structure containing
  *                          fork mutexes.
  */
-static void	select_mutex(
-		pthread_mutex_t **first_mutex,
-		pthread_mutex_t **second_mutex,
-		t_philo *philo)
+static void	select_mutex(pthread_mutex_t **first_mutex,
+		pthread_mutex_t **second_mutex, t_philo *philo)
 {
 	if (&(philo->previous->mutex) < &(philo->next->mutex))
 	{
@@ -45,26 +43,55 @@ static void	select_mutex(
 	}
 }
 
-void	philosopher_eat(t_philo *philo, t_args *args)
+static void	philosopher_death(t_philo *philo, pthread_mutex_t *f_mutex,
+		pthread_mutex_t *s_mutex)
 {
-	//TODO: Añadir la comprobación de la espera y la muerte de hambre, con el
-	//cambio de estatus concreto.
-	//Además, habría que lanzar el mensaje de muerte inmediatamente, antes
-	//de nada.
-	pthread_mutex_t	*first_mutex;
-	pthread_mutex_t	*second_mutex;
+	philo->args->simulation_running = 0;
+	if (f_mutex)
+		pthread_mutex_unlock(f_mutex);
+	if (s_mutex)
+		pthread_mutex_unlock(s_mutex);
+	printf("%10ld" BOLD MAGENTA " %li" RESET RED " died\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
+}
 
-	select_mutex(&first_mutex, &second_mutex, philo);
-	pthread_mutex_lock(first_mutex);
-	printf("%ld" BOLD MAGENTA " %i" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms(), philo->id);
-	pthread_mutex_lock(second_mutex);
-	printf("%ld" BOLD MAGENTA " %i" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms(), philo->id);
-	printf("%ld" BOLD MAGENTA " %i" RESET YELLOW " is eating\n" RESET,
-		get_time_ms(), philo->id);
-	usleep(args->time_eat * 1000);
+static int	death_checker(t_philo *philo, pthread_mutex_t *f_mutex,
+		pthread_mutex_t *s_mutex)
+{
+	long	current_time;
+	long	elapsed;
+
+	current_time = get_time_ms();
+	if (current_time < philo->last_meal_timestamp)
+		return (philosopher_death(philo, f_mutex, s_mutex), 1);
+	elapsed = current_time - philo->last_meal_timestamp;
+	if (elapsed > philo->args->time_die)
+		return (philosopher_death(philo, f_mutex, s_mutex), 1);
+	return (0);
+}
+
+void	philosopher_eat(t_philo *philo)
+{
+	pthread_mutex_t	*f_mutex;
+	pthread_mutex_t	*s_mutex;
+
+	select_mutex(&f_mutex, &s_mutex, philo);
+	pthread_mutex_lock(f_mutex);
+	if (!philo->args->simulation_running || death_checker(philo, f_mutex, NULL))
+		return ;
+	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
+	pthread_mutex_lock(s_mutex);
+	if (!philo->args->simulation_running || death_checker(philo, f_mutex,
+			s_mutex))
+		return ;
+	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
+	printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW " is eating\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
+	philo->last_meal_timestamp = get_time_ms();
+	usleep(philo->args->time_eat * 1000);
 	philo->n_eat++;
-	pthread_mutex_unlock(first_mutex);
-	pthread_mutex_unlock(second_mutex);
+	pthread_mutex_unlock(f_mutex);
+	pthread_mutex_unlock(s_mutex);
 }

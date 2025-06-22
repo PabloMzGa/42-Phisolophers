@@ -41,6 +41,7 @@
 		"variant": "c",
 		"checker.h": "c",
 		"philosophers.h": "c",
-		"colors.h": "c"
+		"colors.h": "c",
+		"numbers": "c"
 	}
 }

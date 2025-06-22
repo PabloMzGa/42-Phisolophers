@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/20 00:13:01 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/23 00:19:44 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,9 @@
 //////////////////////////////////// ENUMS /////////////////////////////////////
 typedef enum e_philo_status
 {
-	ALIVE = 0,
-	DEAD = 1,
+	HUNGRY = 0,
 	FULL = 2
-} t_status;
+}								t_status;
 
 //////////////////////////////////// STRUCS ////////////////////////////////////
 /**
@@ -43,10 +42,12 @@ typedef enum e_philo_status
 typedef struct s_args_info
 {
 	size_t						philo_n;
-	size_t						time_die;
+	long						time_die;
 	size_t						time_eat;
 	size_t						time_sleep;
 	int							n_eat;
+	long						epoch;
+	int							simulation_running;
 }								t_args;
 
 /**
@@ -76,12 +77,10 @@ typedef struct s_philosophers_list
 	pthread_t					thread;
 	pthread_mutex_t				mutex;
 	int							n_eat;
+	long						last_meal_timestamp;
 	t_status					status;
 	t_args						*args;
 }								t_philo;
-
-
-
 
 /////////////////////////////// PHILO MANAGEMENT ///////////////////////////////
 
@@ -116,10 +115,8 @@ t_philo							*populate_philosophers(t_args *args);
  *
  * @param philo Pointer to the philosopher structure representing the current
  * philosopher.
- * @param args Pointer to the arguments structure containing simulation
- * parameters and shared resources.
  */
-void	philosopher_eat(t_philo *philo, t_args *args);
+void							philosopher_eat(t_philo *philo);
 
 /**
  * @brief Makes the philosopher sleep for a specified duration and then think.
@@ -129,12 +126,23 @@ void	philosopher_eat(t_philo *philo, t_args *args);
  * and then prints a message indicating that the philosopher is thinking.
  *
  * @param philo Pointer to the philosopher structure.
- * @param args Pointer to the arguments structure containing simulation
- * parameters.
  */
-void	philosopher_sleep_think(t_philo *philo, t_args *args);
+void							philosopher_sleep_think(t_philo *philo);
 
-void	start_philosophers_behaviour(t_philo *philos, t_args *args);
+void							start_philosophers_behaviour(t_philo *philos);
+
+/**
+ * @brief Waits for the simulation to end based on philosophers' statuses.
+ *
+ * This function loops through the list of philosophers, checking their status.
+ * The simulation continues running as long as not all philosophers have reached
+ * the FULL status (i.e., have eaten the target number of times) and none of
+ * them have reached the DEAD status. If all philosophers are FULL, a message is
+ * printed to indicate the simulation is ending.
+ *
+ * @param philos Pointer to the first philosopher in the linked list.
+ */
+void							wait_philo_end(t_philo *philos);
 
 //////////////////////////////////// UTILS /////////////////////////////////////
 
@@ -147,6 +155,21 @@ void	start_philosophers_behaviour(t_philo *philos, t_args *args);
  * @return The current time in milliseconds as a long integer.
  */
 long							get_time_ms(void);
+
+/**
+ * @brief Checks the validity of command-line arguments for the philosophers
+ * program.
+ *
+ * This function verifies that the number of arguments provided to the program
+ * is within the expected range and that all arguments contain only valid
+ * numeric values. It prints an error message and usage instructions if the
+ * arguments are incorrect.
+ *
+ * @param argc The number of command-line arguments.
+ * @param argv The argument vector.
+ * @return int Returns 0 if the arguments are invalid, 1 otherwise.
+ */
+int	check_args(int argc, char *argv[]);
 
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
 
@@ -165,6 +188,24 @@ long							get_time_ms(void);
  * @return The converted integer value.
  */
 int								ft_atoi(const char *nptr);
+
+/**
+ * @brief Converts a string to a long integer.
+ *
+ * This function parses the input string `nptr` and converts it to a long
+ * integer. It handles optional leading whitespace, an optional '+' or '-'
+ * sign, and numeric characters. If the input string contains non-numeric
+ * characters after the numeric portion, they are ignored.
+ *
+ * @param nptr A pointer to the null-terminated string to be converted.
+ *             The string may begin with whitespace and an optional sign.
+ * @return The converted long integer value. If the string represents a
+ *         negative number, the result will be negative.
+ *
+ * @note This function assumes that the input string is well-formed and does
+ *       not handle overflow or invalid input errors.
+ */
+long							ft_atol(const char *nptr);
 
 /**
  * @brief Converts a string to a size_t integer.
