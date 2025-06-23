@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 00:48:34 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/23 20:11:42 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,22 +53,11 @@ static t_args	*set_args(int argc, char *argv[])
 		args->n_eat = -1;
 	args->epoch = get_time_ms();
 	args->simulation_running = 1;
+	if (pthread_mutex_init(&args->simulation_mutex, NULL) != 0)
+		return (free(args), NULL);
 	return (args);
 }
 
-/**
- * TODO: Necesito crear un monitor. Detectar la muerte en el mismo hilo no
- * funciona debido a que puede morir mientras esté durmiendo y el mensaje
- * aparece cuando despierte.
- *
- * Así que o creo un nuevo hilo que haga de monitor, compruebe el tiempo
- * rotando por la lista y en caso de muerte, detenga la simulación e imprima el
- * mensaje.
- *
- * O hago detatch y hago eso mismo en el main.abort
- *
- * Tengo que investigar que tiene menos overhead
-*/
 int	main(int argc, char *argv[])
 {
 	t_args	*args;
@@ -77,6 +66,8 @@ int	main(int argc, char *argv[])
 	if (!check_args(argc, argv))
 		return (1);
 	args = set_args(argc, argv);
+	if (!args)
+		return (1);
 	philos = populate_philosophers(args);
 	start_philosophers_behaviour(philos);
 	clean_philos(&philos);

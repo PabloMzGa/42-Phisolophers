@@ -1,33 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_philos.c                                     :+:      :+:    :+:   */
+/*   get_philo_status.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 14:15:24 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 19:33:05 by pablo            ###   ########.fr       */
+/*   Created: 2025/06/23 21:45:42 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/23 21:56:24 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	clean_philos(t_philo **philo)
+int	get_philo_status(t_philo *philo)
 {
-	t_philo	*tmp_philo;
-	t_philo	*next_philo;
+	int	status;
 
-	if (!philo || !*philo)
-		return ;
-	if ((*philo)->previous)
-		(*philo)->previous->next = NULL;
-	tmp_philo = *philo;
-	while (tmp_philo)
-	{
-		next_philo = tmp_philo->next;
-		pthread_mutex_destroy(&tmp_philo->fork_mutex);
-		free(tmp_philo);
-		tmp_philo = next_philo;
-	}
-	*philo = NULL;
+	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
+		return (-1);
+	status = philo->status;
+	safe_mutex_unlock(&philo->internal_mutex, philo->args);
+	return (status);
 }

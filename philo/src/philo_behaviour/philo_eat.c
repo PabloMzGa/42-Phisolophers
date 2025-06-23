@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 00:38:49 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/23 21:11:42 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,60 +14,76 @@
 #include "philosophers.h"
 
 /**
- * @brief Selects the order of mutexes to avoid deadlock.
+ * @brief Attempts to acquire the first fork (mutex).
  *
- * This function assigns the addresses of two mutexes associated with the
- * philosopher's previous and next forks to the provided pointers, ensuring
- * a consistent locking order based on their memory addresses. This helps
- * prevent deadlocks when multiple philosophers attempt to lock forks.
- *
- * @param[out] first_mutex  Pointer to store the address of the first mutex
- *                          to lock.
- * @param[out] second_mutex Pointer to store the address of the second mutex
- *                          to lock.
- * @param[in]  philo        Pointer to the philosopher structure containing
- *                          fork mutexes.
+ * @param philo   Pointer to the philosopher structure.
+ * @param f_mutex Pointer to the first mutex to lock.
+ * @return        0 on success, 1 on failure or simulation stop.
  */
-static void	select_mutex(pthread_mutex_t **first_mutex,
-		pthread_mutex_t **second_mutex, t_philo *philo)
+static int	acquire_first_fork(t_philo *philo, pthread_mutex_t *f_mutex)
 {
-	if (&(philo->previous->mutex) < &(philo->next->mutex))
-	{
-		*first_mutex = &(philo->previous->mutex);
-		*second_mutex = &(philo->next->mutex);
-	}
-	else
-	{
-		*first_mutex = &(philo->next->mutex);
-		*second_mutex = &(philo->previous->mutex);
-	}
-}
-
-static void	philosopher_death(t_philo *philo, pthread_mutex_t *f_mutex,
-		pthread_mutex_t *s_mutex)
-{
-	philo->args->simulation_running = 0;
-	if (f_mutex)
-		pthread_mutex_unlock(f_mutex);
-	if (s_mutex)
-		pthread_mutex_unlock(s_mutex);
-	printf("%10ld" BOLD MAGENTA " %li" RESET RED " died\n" RESET,
+	if (safe_mutex_lock(f_mutex, philo->args))
+		return (1);
+	if (check_stop(philo, f_mutex, NULL))
+		return (1);
+	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
 		get_time_ms() - philo->args->epoch, philo->id);
+	return (0);
 }
 
-static int	death_checker(t_philo *philo, pthread_mutex_t *f_mutex,
+/**
+ * @brief Attempts to acquire the second fork (mutex).
+ *
+ * @param philo   Pointer to the philosopher structure.
+ * @param f_mutex Pointer to the first mutex (already locked).
+ * @param s_mutex Pointer to the second mutex to lock.
+ * @return        0 on success, 1 on failure or simulation stop.
+ */
+static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 		pthread_mutex_t *s_mutex)
 {
-	long	current_time;
-	long	elapsed;
-
-	current_time = get_time_ms();
-	if (current_time < philo->last_meal_timestamp)
-		return (philosopher_death(philo, f_mutex, s_mutex), 1);
-	elapsed = current_time - philo->last_meal_timestamp;
-	if (elapsed > philo->args->time_die)
-		return (philosopher_death(philo, f_mutex, s_mutex), 1);
+	if (safe_mutex_lock(s_mutex, philo->args))
+	{
+		pthread_mutex_unlock(f_mutex);
+		return (1);
+	}
+	if (check_stop(philo, f_mutex, s_mutex))
+		return (1);
+	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
 	return (0);
+}
+
+/**
+ * @brief Performs the eating action and updates philosopher state.
+ *
+ * @param philo Pointer to the philosopher structure.
+ */
+static void	perform_eating(t_philo *philo)
+{
+	printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW " is eating\n" RESET,
+		get_time_ms() - philo->args->epoch, philo->id);
+	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
+		return ;
+	philo->last_meal_timestamp = get_time_ms();
+	if (safe_mutex_unlock(&philo->internal_mutex, philo->args))
+		return ;
+	usleep(philo->args->time_eat * 1000);
+	philo->n_eat++;
+}
+
+/**
+ * @brief Releases both forks (mutexes) with error checking.
+ *
+ * @param philo   Pointer to the philosopher structure.
+ * @param f_mutex Pointer to the first mutex to unlock.
+ * @param s_mutex Pointer to the second mutex to unlock.
+ */
+static void	release_forks(t_philo *philo, pthread_mutex_t *f_mutex,
+		pthread_mutex_t *s_mutex)
+{
+	safe_mutex_unlock(f_mutex, philo->args);
+	safe_mutex_unlock(s_mutex, philo->args);
 }
 
 void	philosopher_eat(t_philo *philo)
@@ -76,22 +92,10 @@ void	philosopher_eat(t_philo *philo)
 	pthread_mutex_t	*s_mutex;
 
 	select_mutex(&f_mutex, &s_mutex, philo);
-	pthread_mutex_lock(f_mutex);
-	if (!philo->args->simulation_running || death_checker(philo, f_mutex, NULL))
+	if (acquire_first_fork(philo, f_mutex))
 		return ;
-	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
-	pthread_mutex_lock(s_mutex);
-	if (!philo->args->simulation_running || death_checker(philo, f_mutex,
-			s_mutex))
+	if (acquire_second_fork(philo, f_mutex, s_mutex))
 		return ;
-	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
-	printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW " is eating\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
-	philo->last_meal_timestamp = get_time_ms();
-	usleep(philo->args->time_eat * 1000);
-	philo->n_eat++;
-	pthread_mutex_unlock(f_mutex);
-	pthread_mutex_unlock(s_mutex);
+	perform_eating(philo);
+	release_forks(philo, f_mutex, s_mutex);
 }

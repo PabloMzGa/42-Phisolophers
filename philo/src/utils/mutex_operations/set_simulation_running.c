@@ -1,33 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clean_philos.c                                     :+:      :+:    :+:   */
+/*   set_simulation_running.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 14:15:24 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 19:33:05 by pablo            ###   ########.fr       */
+/*   Created: 2025/06/23 21:55:00 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/23 22:34:28 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void	clean_philos(t_philo **philo)
+void	set_simulation_running(t_args *args, int value)
 {
-	t_philo	*tmp_philo;
-	t_philo	*next_philo;
-
-	if (!philo || !*philo)
-		return ;
-	if ((*philo)->previous)
-		(*philo)->previous->next = NULL;
-	tmp_philo = *philo;
-	while (tmp_philo)
+	if (safe_mutex_lock(&args->simulation_mutex, NULL) == 0)
 	{
-		next_philo = tmp_philo->next;
-		pthread_mutex_destroy(&tmp_philo->fork_mutex);
-		free(tmp_philo);
-		tmp_philo = next_philo;
+		args->simulation_running = value;
+		safe_mutex_unlock(&args->simulation_mutex, NULL);
 	}
-	*philo = NULL;
 }
