@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 13:58:42 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:03:30 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ typedef struct s_args_info
 	long						epoch;
 	int							simulation_running;
 	pthread_mutex_t				simulation_mutex;
-	pthread_mutex_t				pritnf_mutex;
+	pthread_mutex_t				printf_mutex;
 }								t_args;
 
 /**
@@ -100,6 +100,7 @@ typedef struct s_philosophers_list
 	t_status					status;
 	t_args						*args;
 }								t_philo;
+
 /////////////////////////////// PHILO BEHAVIOUR ////////////////////////////////
 
 /**
@@ -118,24 +119,25 @@ int								check_philo_death(t_philo *philo);
 /**
  * @brief Handles the eating behavior of a philosopher.
  *
- * This function manages the process where a philosopher attempts to eat.
- * It typically involves acquiring the necessary resources (such as forks),
- * updating the philosopher's state, and handling timing and synchronization
- * as required by the simulation rules.
+ * This function manages the process of a philosopher attempting to eat.
+ * It selects the appropriate fork mutexes, checks if the simulation is
+ * running, and tries to acquire both forks. If successful, the philosopher
+ * performs the eating action. Regardless of the outcome, it ensures that
+ * the forks are released at the end.
  *
- * @param philo Pointer to the philosopher structure representing the current
- * philosopher.
+ * @param philo Pointer to the philosopher structure.
  */
 void							philosopher_eat(t_philo *philo);
 
 /**
- * @brief Makes the philosopher sleep for a specified duration and then think.
+ * @brief Handles the sleeping and thinking actions of a philosopher.
  *
- * This function prints a message indicating that the philosopher is sleeping,
- * waits for the duration specified by args->time_sleep (in milliseconds),
- * and then prints a message indicating that the philosopher is thinking.
+ * Logs when a philosopher starts sleeping, then makes the philosopher sleep
+ * for the configured duration. After sleeping, if the simulation is still
+ * running, it logs that the philosopher is thinking.
  *
- * @param philo Pointer to the philosopher structure.
+ * @param philo Pointer to the philosopher structure containing its state and
+ * arguments.
  */
 void							philosopher_sleep_think(t_philo *philo);
 
@@ -168,16 +170,16 @@ void							start_philosophers_behaviour(t_philo *philos);
 pthread_t						start_monitor(t_philo *philos);
 
 /**
- * @brief Entry point for the philosopher thread behaviour.
+ * @brief Entry point for the philosopher thread's behaviour.
  *
- * This function defines the main routine executed by each philosopher thread.
- * It optionally staggers the start of odd-numbered philosophers to avoid
- * contention, checks if the simulation is still running, and enters the main
- * behaviour loop. If the philosopher has eaten the required number of times,
- * it updates its status to FULL.
+ * This function is used as the thread routine for each philosopher.
+ * It initializes the philosopher's behaviour by optionally sleeping for a
+ * short duration if the philosopher's ID is odd, to stagger the start times
+ * and reduce contention for resources. After the optional sleep, it enters
+ * the main behaviour loop for the philosopher.
  *
- * @param args Pointer to a t_philo structure containing philosopher-specific
- * data.
+ * @param args Pointer to a t_philo structure containing the philosopher's
+ * state and arguments.
  * @return Always returns NULL.
  */
 void							*philosopher_behaviour(void *args);

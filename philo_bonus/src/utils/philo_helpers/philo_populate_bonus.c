@@ -1,40 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_populate.c                                   :+:      :+:    :+:   */
+/*   philo_populate_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:33:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 16:17:41 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 16:25:26 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
 t_philo	*populate_philosophers(t_args *args)
 {
 	size_t	counter;
-	t_philo	*tmp_philo1;
-	t_philo	*tmp_philo2;
+	t_philo	*tmp_philo;
 
-	counter = 1;
-	tmp_philo1 = create_philo(counter, args);
-	tmp_philo2 = NULL;
-	if (!tmp_philo1)
-		return (NULL);
+	counter = 0;
 	while (counter < args->philo_n)
 	{
 		++counter;
-		tmp_philo2 = create_philo(counter, args);
-		if (!tmp_philo2)
-			return (clean_philos(&tmp_philo1), NULL);
-		add_philo(&tmp_philo1, tmp_philo2);
+		tmp_philo = create_philo(counter, args);
+		tmp_philo->pid = fork();
+		if (tmp_philo->pid != 0)
+			free(tmp_philo);
+		else
+			return (tmp_philo);
 	}
-	if (tmp_philo2)
-	{
-		tmp_philo1->previous = tmp_philo2;
-		tmp_philo2->next = tmp_philo1;
-	}
-	return (tmp_philo1);
+	return (NULL);
 }

@@ -1,41 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 13:46:25 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:07:13 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors.h"
-#include "philosophers.h"
+#include "colors_bonus.h"
+#include "philosophers_bonus.h"
 
-/**
- * @brief Allocates and initializes a t_args structure with command-line
- * arguments.
- *
- * This function parses the command-line arguments and fills a newly allocated
- * t_args structure with the corresponding values:
- *
- *   - philo_n:    Number of philosophers (from argv[1])
- *
- *   - time_die:   Time to die (from argv[2])
- *
- *   - time_eat:   Time to eat (from argv[3])
- *
- *   - time_sleep: Time to sleep (from argv[4])
- *
- *   - n_eat:      Number of times each philosopher must eat (from argv[5],
- *                 optional; set to -1 if not provided)
- *
- * @param argc The argument count from main.
- * @param argv The argument vector from main.
- * @return Pointer to the initialized t_args structure, or NULL on allocation
- *         failure.
- */
+
 static t_args	*set_args(int argc, char *argv[])
 {
 	t_args	*args;
@@ -52,29 +30,38 @@ static t_args	*set_args(int argc, char *argv[])
 	else
 		args->n_eat = -1;
 	args->epoch = get_time_ms();
-	args->simulation_running = 1;
-	if (pthread_mutex_init(&args->simulation_mutex, NULL) != 0)
+	args->forks_sem = sem_open("/forks_sem", O_CREAT, 0644, args->philo_n);
+	if (args->forks_sem = SEM_FAILED)
 		return (free(args), NULL);
-	if (pthread_mutex_init(&args->pritnf_mutex, NULL) != 0)
-		return (free(args), NULL);
+	args->full_sem = sem_open("/full_sem", O_CREAT, 0644, args->philo_n);
+	if (args->forks_sem = SEM_FAILED)
+		return (sem_unlink("/forks_sem"), free(args), NULL);
+	args->stop_sem = sem_oepn("/stop_sem", O_CREAT, 0644, 0);
+	if (args->stop_sem = SEM_FAILED)
+		return (sem_unlink("/forks_sem"), sem_unlink("/full_sem"), free(args),
+			NULL);
 	return (args);
 }
 
 int	main(int argc, char *argv[])
 {
 	t_args	*args;
-	t_philo	*philos;
+	t_philo	*philo;
 
 	if (!check_args(argc, argv))
 		return (1);
 	args = set_args(argc, argv);
 	if (!args)
 		return (1);
-	philos = populate_philosophers(args);
-	start_philosophers_behaviour(philos);
-	clean_philos(&philos);
-	pthread_mutex_destroy(&args->pritnf_mutex);
-	pthread_mutex_destroy(&args->simulation_mutex);
-	free(args);
-	args = NULL;
+	philo = populate_philosophers(args);
+	if (philo)
+		start_philosophers_behaviour(philo);
+	else
+	{
+		// TODO: Hacer una espera, ya sea con semáforo o con waitpid
+		sem_unlink("/forks_sem");
+		sem_unlink("/end_sem");
+		free(args);
+		args = NULL;
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 12:14:30 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:32:16 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static int	check_all_philosophers(t_philo *philos, int *all_full)
 	t_philo	*current_philo;
 	size_t	i;
 	int		someone_died;
+	int		status;
 
 	current_philo = philos;
 	i = 0;
@@ -70,14 +71,11 @@ static int	check_all_philosophers(t_philo *philos, int *all_full)
 	someone_died = 0;
 	while (i < philos->args->philo_n && !someone_died)
 	{
-		if (safe_mutex_lock(&current_philo->internal_mutex,
-				current_philo->args))
+		status = get_philo_status(philos);
+		if (status == -1)
 			return (1);
-		if (current_philo->status != FULL)
+		if (status != FULL)
 			*all_full = 0;
-		if (safe_mutex_unlock(&current_philo->internal_mutex,
-				current_philo->args))
-			return (1);
 		if (!(*all_full))
 			someone_died = check_philo_death(current_philo);
 		current_philo = current_philo->next;

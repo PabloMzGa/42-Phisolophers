@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 12:33:38 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 18:02:38 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,16 +92,20 @@ static void	release_forks(t_philo *philo, pthread_mutex_t *f_mutex,
 	safe_mutex_unlock(s_mutex, philo->args);
 }
 
+
 void	philosopher_eat(t_philo *philo)
 {
 	pthread_mutex_t	*f_mutex;
 	pthread_mutex_t	*s_mutex;
 
 	select_mutex(&f_mutex, &s_mutex, philo);
-	if (acquire_first_fork(philo, f_mutex))
+	if (get_simulation_running(philo->args)
+		&& acquire_first_fork(philo, f_mutex))
 		return ;
-	if (acquire_second_fork(philo, f_mutex, s_mutex))
+	if (get_simulation_running(philo->args)
+		&& acquire_second_fork(philo, f_mutex, s_mutex))
 		return ;
-	perform_eating(philo);
+	if (get_simulation_running(philo->args))
+		perform_eating(philo);
 	release_forks(philo, f_mutex, s_mutex);
 }

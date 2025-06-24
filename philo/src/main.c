@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 13:46:25 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/24 17:28:06 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static t_args	*set_args(int argc, char *argv[])
 	args->simulation_running = 1;
 	if (pthread_mutex_init(&args->simulation_mutex, NULL) != 0)
 		return (free(args), NULL);
-	if (pthread_mutex_init(&args->pritnf_mutex, NULL) != 0)
+	if (pthread_mutex_init(&args->printf_mutex, NULL) != 0)
 		return (free(args), NULL);
 	return (args);
 }
@@ -73,7 +73,7 @@ int	main(int argc, char *argv[])
 	philos = populate_philosophers(args);
 	start_philosophers_behaviour(philos);
 	clean_philos(&philos);
-	pthread_mutex_destroy(&args->pritnf_mutex);
+	pthread_mutex_destroy(&args->printf_mutex);
 	pthread_mutex_destroy(&args->simulation_mutex);
 	free(args);
 	args = NULL;
