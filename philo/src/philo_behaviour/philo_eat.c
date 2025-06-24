@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_eat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 21:11:42 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/24 12:33:38 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ static int	acquire_first_fork(t_philo *philo, pthread_mutex_t *f_mutex)
 		return (1);
 	if (check_stop(philo, f_mutex, NULL))
 		return (1);
-	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	if(safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET GREEN
+		" has taken a fork\n" RESET, get_time_ms() - philo->args->epoch,
+		philo->id, philo->args))
+		return (1);
 	return (0);
 }
 
@@ -49,8 +51,10 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 	}
 	if (check_stop(philo, f_mutex, s_mutex))
 		return (1);
-	printf("%10ld" BOLD MAGENTA " %li" RESET GREEN " has taken a fork\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	if (safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET GREEN
+		" has taken a fork\n" RESET, get_time_ms() - philo->args->epoch,
+		philo->id, philo->args))
+			return (1);
 	return (0);
 }
 
@@ -61,8 +65,10 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
  */
 static void	perform_eating(t_philo *philo)
 {
-	printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW " is eating\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	if(safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW
+		" is eating\n" RESET, get_time_ms() - philo->args->epoch, philo->id,
+		philo->args))
+		return;
 	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
 		return ;
 	philo->last_meal_timestamp = get_time_ms();

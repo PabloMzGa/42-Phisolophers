@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_sleep_think.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:55:37 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 21:39:07 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/24 12:15:56 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,13 @@ void	philosopher_sleep_think(t_philo *philo)
 {
 	int	still_running;
 
-	printf("%10ld" BOLD MAGENTA " %li" RESET BLUE " is sleeping\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	if (safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET BLUE " is sleeping\n"
+		RESET, get_time_ms() - philo->args->epoch, philo->id, philo->args))
+		return ;
 	usleep(philo->args->time_sleep * 1000);
 	still_running = get_simulation_running(philo->args);
 	if (still_running)
-		printf("%10ld " BOLD MAGENTA "%li" RESET BRIGHT_CYAN
+		safe_log_printf("%10ld " BOLD MAGENTA "%li" RESET BRIGHT_CYAN
 			" is thinking\n" RESET, get_time_ms() - philo->args->epoch,
-			philo->id);
+			philo->id, philo->args);
 }

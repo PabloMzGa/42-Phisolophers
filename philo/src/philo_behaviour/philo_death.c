@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_death.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 22:00:56 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/24 12:32:54 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,8 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 		dead = 1;
 	if (dead)
 	{
-		printf("%10ld" BOLD MAGENTA " %li" RESET RED " has died\n" RESET,
-			get_time_ms() - philo->args->epoch, philo->id);
+		safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET RED " has died\n"
+			RESET, get_time_ms() - philo->args->epoch, philo->id, philo->args);
 		set_simulation_running(philo->args, 0);
 	}
 	return (dead);

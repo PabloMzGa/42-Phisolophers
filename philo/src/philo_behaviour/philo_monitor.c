@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_monitor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 22:05:58 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/24 12:14:30 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,8 +126,8 @@ static void	*monitor_routine(void *args)
 	if (all_full && !someone_died)
 	{
 		set_simulation_running(philos->args, 0);
-		printf(BOLD GREEN "All philosophers have eaten the target number of "
-			"times, ending simulation\n" RESET);
+		safe_single_printf(BOLD GREEN "All philosophers have eaten the target "
+			"number of times, ending simulation\n" RESET, philos->args);
 	}
 	return (NULL);
 }

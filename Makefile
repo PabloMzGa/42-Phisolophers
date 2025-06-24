@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
+#    By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/06/23 22:33:11 by pablo            ###   ########.fr        #
+#    Updated: 2025/06/24 12:11:00 by pabmart2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -39,6 +39,7 @@ SRC = \
 	philo/src/utils/mutex_operations/get_philo_status.c \
 	philo/src/utils/mutex_operations/get_simulation_running.c \
 	philo/src/utils/mutex_operations/safe_mutex.c \
+	philo/src/utils/mutex_operations/safe_printf.c \
 	philo/src/utils/mutex_operations/set_philo_status.c \
 	philo/src/utils/mutex_operations/set_simulation_running.c \
 	philo/src/utils/args_parse/ft_atoi.c \

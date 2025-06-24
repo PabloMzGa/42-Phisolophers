@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_philos.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 14:15:24 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 19:33:05 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/24 13:53:39 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	clean_philos(t_philo **philo)
 	{
 		next_philo = tmp_philo->next;
 		pthread_mutex_destroy(&tmp_philo->fork_mutex);
+		pthread_mutex_destroy(&tmp_philo->internal_mutex);
 		free(tmp_philo);
 		tmp_philo = next_philo;
 	}

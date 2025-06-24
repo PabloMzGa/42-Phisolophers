@@ -42,6 +42,7 @@
 		"checker.h": "c",
 		"philosophers.h": "c",
 		"colors.h": "c",
-		"numbers": "c"
+		"numbers": "c",
+		"stdlib.h": "c"
 	}
 }
