@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 00:14:10 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 00:19:28 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/25 18:10:29 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@
  */
 static int	is_valid_number(const char *str)
 {
-	int	i;
+	int		i;
+	long	long_n;
 
 	if (!str)
 		return (0);
@@ -44,6 +45,9 @@ static int	is_valid_number(const char *str)
 			return (0);
 		i++;
 	}
+	long_n = ft_atol(str);
+	if (long_n > UINT_MAX || long_n < 1)
+		return (0);
 	return (1);
 }
 
@@ -68,8 +72,8 @@ static int	validate_argv_numbers(int argc, char *argv[])
 		if (!is_valid_number(argv[i]))
 		{
 			printf(RED "Error: Argument %d ('%s') is not a valid number!\n"
-				RESET BOLD "All arguments must be positive integers.\n\n"
-				RESET, i, argv[i]);
+				RESET BOLD YELLOW "All arguments must be between 1 and %u.\n\n"
+				RESET, i, argv[i], UINT_MAX);
 			return (0);
 		}
 		i++;
@@ -77,29 +81,18 @@ static int	validate_argv_numbers(int argc, char *argv[])
 	return (1);
 }
 
-/**
- * @brief Checks the validity of command-line arguments for the philosophers
- * program.
- *
- * This function verifies that the number of arguments provided to the program
- * is within the expected range and that all arguments contain only valid
- * numeric values. It prints an error message and usage instructions if the
- * arguments are incorrect.
- *
- * @param argc The number of command-line arguments.
- * @param argv The argument vector.
- * @return int Returns 0 if the arguments are invalid, 1 otherwise.
- */
 int	check_args(int argc, char *argv[])
 {
 	if (argc < 5)
 		return (printf(RED "Not enough arguments!\n" RESET BOLD "Usage: " RESET
-				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
+			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+			" [n_times_each_philo_must_eat]\n\n" RESET),
+				0);
 	else if (argc > 6)
 		return (printf(RED "Too many arguments!\n" RESET BOLD "Usage: " RESET
-				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
+			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+			" [n_times_each_philo_must_eat]\n\n" RESET),
+				0);
 	if (!validate_argv_numbers(argc, argv))
 		return (0);
 	else

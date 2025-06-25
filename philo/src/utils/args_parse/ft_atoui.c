@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atosize_t.c                                     :+:      :+:    :+:   */
+/*   ft_atoui.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/11 14:23:00 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/22 23:51:31 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/25 17:13:43 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-size_t	ft_atosize_t(const char *nptr)
+unsigned int	ft_atoui(const char *nptr)
 {
-	size_t	output;
+	unsigned int	output;
 
 	output = 0;
 	while (ft_isspace(*nptr))

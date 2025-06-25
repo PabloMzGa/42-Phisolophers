@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_start.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:38:09 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/23 22:44:36 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/25 18:47:48 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	start_loop(t_philo *philos)
 				philosopher_behaviour, (void *)current_philo))
 		{
 			set_simulation_running(philos->args, 0);
-			printf(RED "Error: Failed to create thread for philosopher %li\n"
+			printf(RED "Error: Failed to create thread for philosopher %u\n"
 				RESET, current_philo->id);
 			wait_philo_end(philos);
 			return (1);

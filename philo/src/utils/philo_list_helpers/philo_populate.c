@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:33:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 16:17:41 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:35:19 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 t_philo	*populate_philosophers(t_args *args)
 {
-	size_t	counter;
-	t_philo	*tmp_philo1;
-	t_philo	*tmp_philo2;
+	unsigned int	counter;
+	t_philo			*tmp_philo1;
+	t_philo			*tmp_philo2;
 
 	counter = 1;
 	tmp_philo1 = create_philo(counter, args);

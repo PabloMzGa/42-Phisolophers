@@ -6,7 +6,7 @@
 #    By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/06/24 12:11:00 by pabmart2         ###   ########.fr        #
+#    Updated: 2025/06/25 18:44:34 by pabmart2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,15 +36,15 @@ SRC = \
 	philo/src/philo_behaviour/philo_start.c \
 	philo/src/utils/get_time_ms.c \
 	philo/src/utils/arg_check.c \
+	philo/src/utils/usleep_check.c \
 	philo/src/utils/mutex_operations/get_philo_status.c \
 	philo/src/utils/mutex_operations/get_simulation_running.c \
 	philo/src/utils/mutex_operations/safe_mutex.c \
 	philo/src/utils/mutex_operations/safe_printf.c \
 	philo/src/utils/mutex_operations/set_philo_status.c \
 	philo/src/utils/mutex_operations/set_simulation_running.c \
-	philo/src/utils/args_parse/ft_atoi.c \
 	philo/src/utils/args_parse/ft_atol.c \
-	philo/src/utils/args_parse/ft_atosize_t.c \
+	philo/src/utils/args_parse/ft_atoui.c \
 	philo/src/utils/args_parse/ft_isdigit.c \
 	philo/src/utils/args_parse/ft_isspace.c \
 	philo/src/utils/philo_list_helpers/add_philo.c \
@@ -100,6 +100,58 @@ $(OBJ) : $(OBJ_DIR)/%.o : %.c $(HEADERS)
 	@$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
 	@echo "\033[34mCompiling: \033[0m$<"
 
+#################################### BONUS #####################################
+
+# Variables para el bonus
+BONUS_BUILD_DIR = build
+BONUS_OBJ_DIR = build/obj_bonus
+BONUS_NAME = philo_bonus
+BONUS_HEADERS = \
+	philo_bonus/include/philosophers_bonus.h \
+	philo_bonus/include/colors_bonus.h
+BONUS_SRC = \
+	philo_bonus/src/main_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_behaviour_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_eat_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_monitor_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_sleep_think_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_start_bonus.c \
+	philo_bonus/src/utils/get_time_ms_bonus.c \
+	philo_bonus/src/utils/arg_check_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_atol_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_atosize_t_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_atoui_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_isdigit_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_isspace_bonus.c \
+	philo_bonus/src/philo_helpers/clean_philo_bonus.c \
+	philo_bonus/src/philo_helpers/create_philo_bonus.c \
+	philo_bonus/src/philo_helpers/philo_populate_bonus.c
+BONUS_OBJ = $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SRC:.c=.o))
+BONUS_INCLUDES = -Iphilo_bonus/include
+
+bonus: $(BONUS_NAME)
+	@echo "\033[35mBonus compiled!\033[0m"
+
+$(BONUS_NAME): $(BONUS_OBJ)
+	@mkdir -p $(BONUS_BUILD_DIR)
+	@$(CC) $(CFLAGS) $(BONUS_OBJ) -o $(BONUS_BUILD_DIR)/$(BONUS_NAME) $(BONUS_INCLUDES)
+	@echo "\033[32m\n¡$(BONUS_NAME) compiled! ᕦ(\033[36m⌐■\033[32m_\033[36m■\033[32m)ᕤ\n"
+
+$(BONUS_OBJ) : $(BONUS_OBJ_DIR)/%.o : %.c $(BONUS_HEADERS)
+	@mkdir -p $(dir $@)
+	@$(CC) $(CFLAGS) $(BONUS_INCLUDES) -c $< -o $@
+	@echo "\033[34mCompiling bonus: \033[0m$<"
+
+bonus-clean:
+	@rm -rf $(BONUS_OBJ_DIR)
+	@echo "\033[31mBonus object files removed\033[0m"
+
+bonus-fclean: bonus-clean
+	@rm -f $(BONUS_BUILD_DIR)/$(BONUS_NAME)
+	@echo "\033[31m$(BONUS_NAME) removed\033[0m"
+
+bonus-re: bonus-fclean
+	$(MAKE) bonus
 
 ################################################
-.PHONY: all debug debug-asan debug-tsan debug-helgrind clean fclean re
+.PHONY: all debug debug-asan debug-tsan debug-helgrind clean fclean re bonus bonus-clean bonus-fclean bonus-re

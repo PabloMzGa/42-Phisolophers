@@ -6,19 +6,22 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 18:03:30 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:07:18 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
 
+# include <limits.h>
 # include <pthread.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+
+# define MICROSLEEP_MS 10
 
 //////////////////////////////////// ENUMS /////////////////////////////////////
 /**
@@ -53,12 +56,12 @@ typedef enum e_philo_status
  */
 typedef struct s_args_info
 {
-	size_t						philo_n;
-	long						time_die;
-	size_t						time_eat;
-	size_t						time_sleep;
-	int							n_eat;
-	long						epoch;
+	unsigned int				philo_n;
+	unsigned int				time_die;
+	unsigned int				time_eat;
+	unsigned int				time_sleep;
+	unsigned int				n_eat;
+	unsigned int				epoch;
 	int							simulation_running;
 	pthread_mutex_t				simulation_mutex;
 	pthread_mutex_t				printf_mutex;
@@ -91,12 +94,12 @@ typedef struct s_philosophers_list
 {
 	struct s_philosophers_list	*previous;
 	struct s_philosophers_list	*next;
-	size_t						id;
+	unsigned int				id;
 	pthread_t					thread;
 	pthread_mutex_t				fork_mutex;
 	pthread_mutex_t				internal_mutex;
-	int							n_eat;
-	long						last_meal_timestamp;
+	unsigned int				n_eat;
+	unsigned int				last_meal_timestamp;
 	t_status					status;
 	t_args						*args;
 }								t_philo;
@@ -247,24 +250,24 @@ int								check_args(int argc, char *argv[]);
  * This function retrieves the current system time using gettimeofday,
  * and returns the time in milliseconds since the Unix epoch.
  *
- * @return The current time in milliseconds as a long integer.
+ * @return The current time in milliseconds as a unsigned int.
  */
-long							get_time_ms(void);
+unsigned int					get_time_ms(void);
 
 /**
- * @brief Safely locks a pthread mutex and handles errors.
+ * @brief Sleeps for a specified amount of time in ms, checking periodically
+ *        if the simulation is still running.
  *
- * Attempts to lock the given mutex. If locking fails, prints an error
- * message and returns 1. If args is not NULL, also sets the
- * simulation_running flag to 0. Otherwise, returns 0 on success.
+ * This function divides the total sleep time into smaller intervals
+ * (MICROSLEEP_MS) and after each interval, checks if the simulation
+ * should continue running by calling get_simulation_running(args).
+ * If the simulation is no longer running, the function returns early.
  *
- * @param mutex Pointer to the pthread_mutex_t to lock.
- * @param args Pointer to the t_args structure, used to signal simulation
- * status. Can be NULL to avoid modifying simulation_running.
- * @return int 0 on success, 1 on failure.
+ * @param sleep The total time to sleep in milliseconds.
+ * @param args Pointer to the simulation arguments structure, used to check
+ *             simulation state.
  */
-int								safe_mutex_lock(pthread_mutex_t *mutex,
-									t_args *args);
+void							usleep_check(unsigned int sleep, t_args *args);
 
 /////////////////////////// UTILS - MUTEX OPERATIOS ////////////////////////////
 
@@ -296,6 +299,21 @@ int								get_philo_status(t_philo *philo);
 int								get_simulation_running(t_args *args);
 
 /**
+ * @brief Safely locks a pthread mutex and handles errors.
+ *
+ * Attempts to lock the given mutex. If locking fails, prints an error
+ * message and returns 1. If args is not NULL, also sets the
+ * simulation_running flag to 0. Otherwise, returns 0 on success.
+ *
+ * @param mutex Pointer to the pthread_mutex_t to lock.
+ * @param args Pointer to the t_args structure, used to signal simulation
+ * status. Can be NULL to avoid modifying simulation_running.
+ * @return int 0 on success, 1 on failure.
+ */
+int								safe_mutex_lock(pthread_mutex_t *mutex,
+									t_args *args);
+
+/**
  * @brief Safely unlocks a pthread mutex and handles errors.
  *
  * This function attempts to unlock the given mutex. If unlocking fails,
@@ -325,23 +343,23 @@ int								safe_mutex_unlock(pthread_mutex_t *mutex,
 int								safe_single_printf(char *string, t_args *args);
 
 /**
- * @brief Safely prints a formatted log message with timestamp and id,
- *        ensuring thread-safe access using a mutex.
+ * @brief Safely prints a formatted log message with a timestamp and an ID,
+ *        using a mutex for thread safety.
  *
- * Locks the printf mutex before printing the message to prevent race
- * conditions in multi-threaded environments. Unlocks the mutex after
- * printing. Returns 1 if locking or unlocking fails.
+ * This function locks the provided printf mutex before printing to ensure
+ * that log messages from different threads do not interleave. It prints
+ * the given string, substituting the elapsed time since the epoch and the
+ * provided ID. After printing, it unlocks the mutex.
  *
- * @param string The format string to print (should include placeholders
- *               for timestamp and id).
- * @param timestamp The timestamp value to include in the log message.
- * @param id The identifier to include in the log message.
- * @param args Pointer to the arguments structure containing the
- *             printf mutex.
- * @return Returns 0 on success, or 1 if mutex lock/unlock fails.
+ * @param string The format string to print (should contain two format
+ *               specifiers: one for time, one for ID).
+ * @param id     The identifier to include in the log message.
+ * @param args   Pointer to a t_args structure containing the printf mutex
+ *               and epoch time.
+ * @return       0 on success, 1 if locking or unlocking the mutex fails.
  */
-int								safe_log_printf(char *string, long timestamp,
-									size_t id, t_args *args);
+int								safe_log_printf(char *string, size_t id,
+									t_args *args);
 
 /**
 	* @brief Sets the simulation running state in a thread-safe manner.
@@ -373,22 +391,6 @@ void							set_philo_status(t_philo *philo, int status);
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
 
 /**
- * @brief Converts a string to an integer.
- *
- * This function takes a string `nptr` and converts it to an integer. It skips
- * any leading whitespace characters and then checks for an optional sign
- * character ('-' or '+'). If a '-' sign is found, the resulting integer will
- * be negative. After that, it iterates through the string and converts each
- * digit character to its corresponding integer value. The function stops
- * converting when it encounters a non-digit character. The final result is
- * multiplied by the sign value and returned.
- *
- * @param nptr The string to be converted to an integer.
- * @return The converted integer value.
- */
-int								ft_atoi(const char *nptr);
-
-/**
  * @brief Converts a string to a long integer.
  *
  * This function parses the input string `nptr` and converts it to a long
@@ -407,18 +409,18 @@ int								ft_atoi(const char *nptr);
 long							ft_atol(const char *nptr);
 
 /**
- * @brief Converts a string to a size_t integer.
+ * @brief Converts a string to an unsigned int.
  *
- * Parses the input string, skipping any leading whitespace, and converts the
- * subsequent numeric characters into a size_t value. Handles an optional '+'
- * sign, but returns 0 if a '-' sign is encountered, as size_t cannot represent
- * negative values. Parsing stops at the first non-digit character.
+ * Parses the string pointed to by @p nptr, skipping any leading whitespace
+ * characters. Converts the subsequent numeric characters into an unsigned
+ * integer value. If the string starts with a minus sign ('-'), the function
+ * returns 0. If the string starts with a plus sign ('+'), it is ignored.
+ * The conversion stops at the first non-digit character.
  *
- * @param nptr The string to be converted.
- * @return The converted size_t value, or 0 if the string is negative or
- *         invalid.
+ * @param nptr The string to convert.
+ * @return The converted unsigned integer value, or 0 if the input is negative.
  */
-size_t							ft_atosize_t(const char *nptr);
+unsigned int					ft_atoui(const char *nptr);
 
 /**
  * Checks if the given character is numeric.
@@ -483,7 +485,7 @@ void							clean_philos(t_philo **philo);
  * @return      Pointer to the newly created t_philo structure,
  *              or NULL if memory allocation fails.
  */
-t_philo							*create_philo(size_t id, t_args *args);
+t_philo							*create_philo(unsigned int id, t_args *args);
 
 /**
  * @brief Searches for a philosopher node with the specified id in a circular

@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/24 17:07:01 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:08:51 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 /** TODO: Crear dos monitores, uno para cuando se detecte una muerte,
  * otro para cuando se hayan llenado todos. Este segundo sólo se creará
- * en caso de que philo->args->n_eat != -1.monitor_thread
+ * en caso de que philo->args->n_eat != -1.
  *
  * El semáforo de muerte, cuando un proceso hijo muera, hará tantos
  * sem_post como Nº de filósofos. De esta forma "llenamos" el semáforo
@@ -28,6 +28,8 @@
  * filósofos, y al terminar, hará tantos post del stop_sem como sean
  * necesarios para activar los monitores locales de cada hijo.
  */
+
+
 void	start_philosophers_behaviour(t_philo *philo)
 {
 	pthread_t	monitor_thread;

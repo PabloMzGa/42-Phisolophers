@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 17:18:17 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:04:15 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@ t_philo	*create_philo(size_t id, t_args *args)
 	philo->args = args;
 	philo->status = HUNGRY;
 	philo->last_meal_timestamp = get_time_ms();
+	if (pthread_mutex_init(&philo->internal_mutex, NULL) != 0)
+		return (free(philo), NULL);
 	return (philo);
 }

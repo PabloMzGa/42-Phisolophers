@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 21:22:16 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 18:01:36 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 17:59:40 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static void	behaviour_loop(t_philo *philo)
 		if (philo->next)
 		{
 			philosopher_eat(philo);
-			if (philo->args->n_eat != -1 && philo->n_eat >= philo->args->n_eat
-				&& get_philo_status(philo) != FULL)
+			if (philo->args->n_eat != 0 && philo->n_eat >=
+				philo->args->n_eat && get_philo_status(philo) != FULL)
 				set_philo_status(philo, FULL);
 			philosopher_sleep_think(philo);
 		}
@@ -43,15 +43,13 @@ static void	behaviour_loop(t_philo *philo)
 	}
 }
 
-
-
 void	*philosopher_behaviour(void *args)
 {
 	t_philo	*philo;
 
 	philo = (t_philo *)args;
 	if (philo->id % 2 != 0)
-		usleep((philo->args->time_die / 20) * 1000);
+		usleep_check((philo->args->time_die / 20), philo->args);
 	behaviour_loop(philo);
 	return (NULL);
 }

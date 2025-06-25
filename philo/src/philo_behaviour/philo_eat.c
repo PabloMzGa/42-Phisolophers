@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 18:02:38 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:42:20 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,8 @@ static int	acquire_first_fork(t_philo *philo, pthread_mutex_t *f_mutex)
 		return (1);
 	if (check_stop(philo, f_mutex, NULL))
 		return (1);
-	if(safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET GREEN
-		" has taken a fork\n" RESET, get_time_ms() - philo->args->epoch,
-		philo->id, philo->args))
+	if(safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
+		" has taken a fork\n" RESET, philo->id, philo->args))
 		return (1);
 	return (0);
 }
@@ -51,9 +50,8 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 	}
 	if (check_stop(philo, f_mutex, s_mutex))
 		return (1);
-	if (safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET GREEN
-		" has taken a fork\n" RESET, get_time_ms() - philo->args->epoch,
-		philo->id, philo->args))
+	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
+		" has taken a fork\n" RESET,  philo->id, philo->args))
 			return (1);
 	return (0);
 }
@@ -65,8 +63,8 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
  */
 static void	perform_eating(t_philo *philo)
 {
-	if(safe_log_printf("%10ld" BOLD MAGENTA " %li" RESET YELLOW
-		" is eating\n" RESET, get_time_ms() - philo->args->epoch, philo->id,
+	if(safe_log_printf("%10u" BOLD MAGENTA " %u" RESET YELLOW
+		" is eating\n" RESET, philo->id,
 		philo->args))
 		return;
 	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
@@ -74,7 +72,7 @@ static void	perform_eating(t_philo *philo)
 	philo->last_meal_timestamp = get_time_ms();
 	if (safe_mutex_unlock(&philo->internal_mutex, philo->args))
 		return ;
-	usleep(philo->args->time_eat * 1000);
+	usleep_check(philo->args->time_eat, philo->args);
 	philo->n_eat++;
 }
 

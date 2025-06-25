@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 21:22:16 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 18:09:42 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 18:44:51 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static void	behaviour_loop(t_philo *philo)
 	while (1)
 	{
 		philosopher_eat(philo);
-		if (philo->status != FULL && philo->args->n_eat != -1
+		if (philo->status != FULL && philo->args->n_eat != 0
 			&& philo->n_eat >= philo->args->n_eat)
 		{
 			philo->status = FULL;

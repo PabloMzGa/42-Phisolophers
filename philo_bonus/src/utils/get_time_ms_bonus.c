@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi_bonus.c                                    :+:      :+:    :+:   */
+/*   get_time_ms_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 14:23:00 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/24 16:22:22 by pabmart2         ###   ########.fr       */
+/*   Created: 2025/06/19 21:03:17 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/25 18:42:41 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "philosophers_bonus.h"
 
-int	ft_atoi(const char *nptr)
+unsigned int	get_time_ms(void)
 {
-	int		output;
-	char	negative;
+	long			ms;
+	struct timeval	time;
 
-	output = 0;
-	negative = 1;
-	while (ft_isspace(*nptr))
-		++nptr;
-	if (*nptr == '-')
-	{
-		negative = -1;
-		++nptr;
-	}
-	else if (*nptr == '+')
-		++nptr;
-	while (ft_isdigit(*nptr))
-	{
-		output = output * 10 + *nptr - '0';
-		++nptr;
-	}
-	return (output * negative);
+	gettimeofday(&time, NULL);
+	ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (ms);
 }

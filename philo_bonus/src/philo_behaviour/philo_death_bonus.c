@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_death.c                                      :+:      :+:    :+:   */
+/*   philo_death_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:42:20 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/25 19:09:14 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors.h"
-#include "philosophers.h"
+#include "colors_bonus.h"
+#include "philosophers_bonus.h"
 
 /**
  * @brief Checks if a philosopher has died based on the current time and last
