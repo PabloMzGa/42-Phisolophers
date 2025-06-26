@@ -3,19 +3,42 @@
 /*                                                        :::      ::::::::   */
 /*   philo_populate_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:33:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 19:05:10 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:38:34 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
+/**
+ * @brief Opens and assigns numbered semaphores for a philosopher instance.
+ *
+ * This function initializes the semaphores required for a philosopher,
+ * specifically the printf and last_meal semaphores, using the philosopher's
+ * identifier. If any semaphore fails to open, the function returns NULL.
+ *
+ * @param philo Pointer to the philosopher structure to populate with
+ *              semaphores.
+ * @return Pointer to the philosopher structure on success, or NULL on
+ *         failure.
+ */
+static t_philo	*open_semaphores(t_philo *philo)
+{
+	philo->printf_sem = get_sem_numbered("/printf_sem", philo->id, 1);
+	if (philo->printf_sem == NULL)
+		return (NULL);
+	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", philo->id, 1);
+	if (philo->last_meal_sem == NULL)
+		return (NULL);
+	return (philo);
+}
+
 t_philo	*populate_philosophers(t_args *args)
 {
-	size_t	counter;
-	t_philo	*tmp_philo;
+	unsigned int	counter;
+	t_philo			*tmp_philo;
 
 	counter = 0;
 	while (counter < args->philo_n)
@@ -23,14 +46,14 @@ t_philo	*populate_philosophers(t_args *args)
 		++counter;
 		tmp_philo = create_philo(counter, args);
 		if (!tmp_philo)
-			//TODO: Esto debería ir a algún cleanup que se encargue de matar
-			//todos los procesos que se hayan creado previamente.
+			// TODO: Esto debería ir a algún cleanup que se encargue de matar
+			// todos los procesos que se hayan creado previamente.
 			return (NULL);
 		tmp_philo->pid = fork();
 		if (tmp_philo->pid != 0)
 			free(tmp_philo);
 		else
-			return (tmp_philo);
+			return (open_semaphores(tmp_philo));
 	}
 	return (NULL);
 }

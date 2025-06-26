@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 19:07:18 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 12:16:46 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -358,7 +358,7 @@ int								safe_single_printf(char *string, t_args *args);
  *               and epoch time.
  * @return       0 on success, 1 if locking or unlocking the mutex fails.
  */
-int								safe_log_printf(char *string, size_t id,
+int								safe_log_printf(char *string, unsigned int id,
 									t_args *args);
 
 /**
@@ -502,7 +502,7 @@ t_philo							*create_philo(unsigned int id, t_args *args);
  * @return Pointer to the t_philo node with the matching id, or NULL if not
  * found.
  */
-t_philo							*get_philo(t_philo *philos, size_t id);
+t_philo							*get_philo(t_philo *philos, unsigned int id);
 
 /**
  * @brief Initializes a circular doubly linked list of philosophers.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_death_monitor_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 19:02:46 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:03:33 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static void	*death_monitor(void *args)
 		is_dead = check_philo_death(philo);
 	while (counter < philo->args->philo_n)
 	{
-		sem_post(philo->args->death_sem);
+		safe_sem_post(philo->args->death_sem);
 		++counter;
 	}
 	return (NULL);
@@ -65,17 +65,21 @@ static void	*death_stop_monitor(void *args)
 	return (NULL);
 }
 
-int	start_death_monitors(t_philo *philos)
+int	start_death_monitors(t_philo *philo)
 {
-	if (pthread_create(NULL, NULL, death_monitor, philos) != 0)
+	pthread_t death_monitor_id;
+	pthread_t death_stop_monitor_id;
+	if (pthread_create(&death_monitor_id, NULL, death_monitor, philo) != 0)
 	{
 		printf(RED "Error: Failed to create death monitor thread\n" RESET);
 		return (1);
 	}
-	if (pthread_create(NULL, NULL, death_stop_monitor, philos) != 0)
+	if (pthread_create(&death_stop_monitor_id, NULL, death_stop_monitor, philo) != 0)
 	{
 		printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
 		return (1);
 	}
+	pthread_detach(death_monitor_id);
+	pthread_detach(death_stop_monitor_id);
 	return (0);
 }

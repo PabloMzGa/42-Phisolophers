@@ -1,36 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_strlcat_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:41:00 by pablo            ###   ########.fr       */
+/*   Created: 2024/09/10 23:17:08 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/26 12:57:13 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-// TODO: Proteger los printf con un mutex
-
-int	main(int argc, char *argv[])
+size_t	ft_strlcat(char *dst, const char *src, size_t size)
 {
-	t_args	args;
-	t_philo	*philo;
+	size_t	dst_length;
+	size_t	src_length;
+	size_t	src_i;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	philo = populate_philosophers(&args);
-	if (philo)
-		start_philosophers_behaviour(philo);
-	else
+	src_length = ft_strlen(src);
+	dst_length = ft_strlen(dst);
+	if (size <= dst_length)
+		return (size + src_length);
+	src_i = 0;
+	while (src[src_i] && (src_i + dst_length) < (size - 1))
 	{
-		sem_close(args.forks_sem);
-		sem_close(args.full_sem);
-		sem_close(args.death_sem);
+		dst[dst_length + src_i] = src[src_i];
+		src_i++;
 	}
+	dst[dst_length + src_i] = '\0';
+	return (dst_length + src_length);
 }

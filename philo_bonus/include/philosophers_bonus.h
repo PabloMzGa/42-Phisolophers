@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 19:09:06 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:47:19 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ typedef struct s_args_info
 	sem_t			*forks_sem;
 	sem_t			*death_sem;
 	sem_t			*full_sem;
-	pthread_mutex_t	printf_mutex;
 }					t_args;
 
 typedef struct s_philosopher
@@ -59,7 +58,8 @@ typedef struct s_philosopher
 	unsigned int	id;
 	unsigned int	n_eat;
 	unsigned int	last_meal_timestamp;
-	pthread_mutex_t	internal_mutex;
+	sem_t			*printf_sem;
+	sem_t			*last_meal_sem;
 	pid_t			pid;
 	t_status		status;
 	t_args			*args;
@@ -140,7 +140,7 @@ void				start_philosophers_behaviour(t_philo *philo);
  */
 int					start_death_monitors(t_philo *philos);
 
-///////////////////////////////////// UTILS ////////////////////////////////////
+///////////////////////////////// UTILS - MISC /////////////////////////////////
 
 /**
  * @brief Checks the validity of command-line arguments for the philosophers
@@ -158,6 +158,22 @@ int					start_death_monitors(t_philo *philos);
 int					check_args(int argc, char *argv[]);
 
 /**
+ * @brief Creates or opens a numbered POSIX semaphore with a unique name.
+ *
+ * This function generates a semaphore name by concatenating the given base
+ * name with the string representation of the provided id. It then attempts
+ * to open (or create) the semaphore with the specified initial value. The
+ * semaphore is unlinked immediately after creation to ensure it is removed
+ * when no longer in use.
+ *
+ * @param name The base name for the semaphore.
+ * @param id The unique identifier to append to the base name.
+ * @param value The initial value for the semaphore if it is created.
+ * @return A pointer to the opened semaphore, or NULL on failure.
+ */
+sem_t				*get_sem_numbered(char *name, unsigned int id, int value);
+
+/**
  * @brief Gets the current time in milliseconds.
  *
  * This function retrieves the current system time using gettimeofday,
@@ -167,54 +183,31 @@ int					check_args(int argc, char *argv[]);
  */
 unsigned int		get_time_ms(void);
 
-/////////////////////////// UTILS - MUTEX OPERATIOS ////////////////////////////
-
 /**
- * @brief Safely locks a pthread mutex and handles errors.
+ * @brief Initializes the simulation arguments and named semaphores.
  *
- * Attempts to lock the given mutex. If locking fails, prints an error
- * message and returns 1. If args is not NULL, also sets the
- * simulation_running flag to 0. Otherwise, returns 0 on success.
+ * Parses command-line arguments to set up the simulation parameters in the
+ * provided t_args structure. Initializes and unlinks named POSIX semaphores
+ * for forks, full philosophers, and death detection. Handles error cases
+ * by closing any previously opened semaphores and returning an error code.
  *
- * @param mutex Pointer to the pthread_mutex_t to lock.
- * @param args Pointer to the t_args structure, used to signal simulation
- * status. Can be NULL to avoid modifying simulation_running.
- * @return int 0 on success, 1 on failure.
+ * @param args Pointer to the t_args structure to be initialized.
+ * @param argc Argument count from main.
+ * @param argv Argument vector from main.
+ * @return int Returns 0 on success, or 1 on failure to initialize semaphores.
  */
-int					safe_mutex_lock(pthread_mutex_t *mutex, t_args *args);
+int					set_args(t_args *args, int argc, char *argv[]);
 
-/**
- * @brief Safely unlocks a pthread mutex and handles errors.
- *
- * This function attempts to unlock the given mutex. If unlocking fails,
- * it prints an error message and returns 1. If args is not NULL, also
- * sets the simulation_running flag to 0 (indicating the simulation
- * should stop). On success, it returns 0.
- *
- * @param mutex Pointer to the pthread_mutex_t to unlock.
- * @param args Pointer to the t_args structure containing simulation state.
- * Can be NULL to avoid modifying simulation_running.
- * @return int 0 on success, 1 on failure.
- */
-int					safe_mutex_unlock(pthread_mutex_t *mutex, t_args *args);
+//////////////////////////// UTILS - SEM OPERATIOS /////////////////////////////
 
-/**
- * @brief Safely prints a formatted log message with a timestamp and an ID,
- *        using a mutex for thread safety.
- *
- * This function locks the provided printf mutex before printing to ensure
- * that log messages from different threads do not interleave. It prints
- * the given string, substituting the elapsed time since the epoch and the
- * provided ID. After printing, it unlocks the mutex.
- *
- * @param string The format string to print (should contain two format
- *               specifiers: one for time, one for ID).
- * @param id     The identifier to include in the log message.
- * @param args   Pointer to a t_args structure containing the printf mutex
- *               and epoch time.
- * @return       0 on success, 1 if locking or unlocking the mutex fails.
- */
-int					safe_log_printf(char *string, size_t id, t_args *args);
+int					safe_sem_wait(sem_t *sem);
+
+int					safe_sem_post(sem_t *sem);
+
+int					safe_single_printf(char *string, t_philo *philo);
+
+int					safe_log_printf(char *string, unsigned int id,
+						t_philo *philo);
 
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
 
@@ -251,18 +244,29 @@ unsigned int		ft_atoui(const char *nptr);
 long				ft_atol(const char *nptr);
 
 /**
- * @brief Converts a string to a size_t integer.
+ * Sets the first n bytes of the memory pointed to by s to zero.
  *
- * Parses the input string, skipping any leading whitespace, and converts the
- * subsequent numeric characters into a size_t value. Handles an optional '+'
- * sign, but returns 0 if a '-' sign is encountered, as size_t cannot represent
- * negative values. Parsing stops at the first non-digit character.
- *
- * @param nptr The string to be converted.
- * @return The converted size_t value, or 0 if the string is negative or
- *         invalid.
+ * @param s Pointer to the memory to be zeroed.
+ * @param n Number of bytes to be zeroed.
  */
-size_t				ft_atosize_t(const char *nptr);
+void				ft_bzero(void *s, size_t n);
+
+/**
+ * @brief Allocates memory for an array of elements and initializes them to 0.
+ *
+ * This function allocates memory for an array of `nmemb` elements,
+ * each of `size` bytes, and initializes all the allocated memory to 0.
+ * The total size of the allocated memory is calculated as `nmemb * size`.
+ *
+ * @param nmemb The number of elements to allocate memory for.
+ * @param size The size of each element in bytes.
+ * @return On success, a pointer to the allocated memory is returned.
+ *         If either `nmemb` or `size` is 0, or if the multiplication of
+ *         `nmemb` and `size` exceeds `INT_MAX`, then`NULL` is returned.
+ *
+ * @note If memory allocation fails, errno is set to ENOMEM.
+ */
+void				*ft_calloc(size_t nmemb, size_t size);
 
 /**
  * Checks if the given character is numeric.
@@ -284,6 +288,83 @@ int					ft_isdigit(int c);
  * @return 1 if the character is a whitespace character, 0 otherwise.
  */
 int					ft_isspace(char c);
+
+/**
+ * @brief Copies a block of memory from a source address to a destination
+ * address.
+ *
+ * This function copies the values of `n` bytes from the memory area pointed
+ * to by `src` to the memory area pointed to by `dest`. The memory areas must
+ * not overlap.
+ *
+ * @param dest Pointer to the destination memory area.
+ * @param src Pointer to the source memory area.
+ * @param n Number of bytes to be copied.
+ * @return Pointer to the destination memory area (`dest`).
+ */
+void				*ft_memcpy(void *dest, const void *src, size_t n);
+
+/**
+ * @brief Duplicates a string.
+ *
+ * This function allocates sufficient memory for a copy of the string s,
+ * does the copy, and returns a pointer to it. The memory allocated for the
+ * new string is obtained with malloc, and can be freed with free.
+ *
+ * @param s The string to duplicate.
+ * @return A pointer to the duplicated string, or NULL if insufficient memory
+ *         was available.
+ */
+char				*ft_strdup(const char *s);
+
+/**
+ * @brief Concatenates two strings into a new string.
+ *
+ * This function takes two null-terminated strings, `s1` and `s2`, and
+ * concatenates them into a newly allocated string. The new string is
+ * dynamically allocated and must be freed by the caller.
+ *
+ * @param s1 The first string to concatenate.
+ * @param s2 The second string to concatenate.
+ * @return A pointer to the newly allocated string containing the
+ * concatenated result of `s1` and `s2`, or NULL if memory allocation fails.
+ */
+char				*ft_strjoin(char const *s1, char const *s2);
+
+/**
+ * Appends the string pointed to by `src` to the end of the string pointed to
+ * by `dst`. It will append at most `size - strlen(dst) - 1` characters,
+ * null-terminating the result.
+ *
+ * @param dst The destination string.
+ * @param src The source string.
+ * @param size The size of the destination buffer.
+ * @return The total length of the string that would have been created if
+ *         `size` was large enough. If the return value is greater than or
+ *         equal to `size`, truncation occurred.
+ */
+size_t				ft_strlcat(char *dst, const char *src, size_t size);
+
+/**
+ * Calculates the length of a null-terminated string.
+ *
+ * @param str The string to calculate the length of.
+ * @return The length of the string.
+ */
+size_t				ft_strlen(const char *str);
+
+/**
+ * @brief Converts an unsigned integer to a null-terminated string.
+ *
+ * This function takes an unsigned integer and converts it to a string
+ * representation. The resulting string is dynamically allocated and
+ * must be freed by the caller.
+ *
+ * @param n The unsigned integer to convert.
+ * @return A pointer to the newly allocated string representing the number,
+ *         or NULL if memory allocation fails.
+ */
+char				*ft_uitoa(unsigned int n);
 
 ////////////////////////// UTILS - PHILO LIST HELPERS //////////////////////////
 
@@ -311,7 +392,7 @@ void				clean_philo(t_philo *philo);
  * @return      Pointer to the newly created t_philo structure, or NULL if
  *              memory allocation fails.
  */
-t_philo				*create_philo(size_t id, t_args *args);
+t_philo				*create_philo(unsigned int id, t_args *args);
 
 /**
  * @brief Populates philosopher structures and forks processes for each.

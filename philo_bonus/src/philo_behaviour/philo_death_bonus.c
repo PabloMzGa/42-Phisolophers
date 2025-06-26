@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_death_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 19:09:14 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:06:52 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,9 +46,9 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 		dead = 1;
 	if (dead)
 	{
-		safe_log_printf("%10u" BOLD MAGENTA " %u" RESET RED " has died\n"
-			RESET, philo->id, philo->args);
-		set_simulation_running(philo->args, 0);
+		safe_log_printf("%10u" BOLD MAGENTA " %u" RESET RED " has died\n" RESET,
+			philo->id, philo);
+		//set_simulation_running(philo->args, 0);
 	}
 	return (dead);
 }
@@ -56,23 +56,22 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 /**
  * @brief Safely retrieves the last meal timestamp of a philosopher.
  *
- * This function locks the philosopher's internal mutex to safely read
- * the last meal timestamp and stores it in the provided pointer.
- * It ensures thread-safe access to the philosopher's data.
+ * This function acquires a semaphore to ensure exclusive access to the
+ * philosopher's last meal timestamp, copies its value to the provided pointer,
+ * and then releases the semaphore. This prevents race conditions when multiple
+ * processes or threads may access or modify the timestamp concurrently.
  *
- * @param philo Pointer to the philosopher structure.
- * @param last_meal Pointer to a long where the last meal timestamp will
- *                  be stored.
- * @return int Returns 0 on success, or 1 if a mutex lock/unlock operation
- *         fails.
+ * @param philo Pointer to the philosopher structure whose last meal timestamp
+ *              is to be retrieved.
+ * @param last_meal Pointer to a long where the retrieved timestamp will be
+ *                  stored.
+ * @return Always returns 0.
  */
 static int	get_last_meal(t_philo *philo, long *last_meal)
 {
-	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
-		return (1);
+	safe_sem_wait(philo->last_meal_sem);
 	*last_meal = philo->last_meal_timestamp;
-	if (safe_mutex_unlock(&philo->internal_mutex, philo->args))
-		return (1);
+	safe_sem_post(philo->last_meal_sem);
 	return (0);
 }
 

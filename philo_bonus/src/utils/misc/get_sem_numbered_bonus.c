@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   get_sem_numbered_bonus.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:41:00 by pablo            ###   ########.fr       */
+/*   Created: 2025/06/26 11:59:13 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/26 14:10:10 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-// TODO: Proteger los printf con un mutex
-
-int	main(int argc, char *argv[])
+sem_t	*get_sem_numbered(char *name, unsigned int id, int value)
 {
-	t_args	args;
-	t_philo	*philo;
+	char	*id_str;
+	char	*full_name;
+	sem_t	*sem;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	philo = populate_philosophers(&args);
-	if (philo)
-		start_philosophers_behaviour(philo);
-	else
-	{
-		sem_close(args.forks_sem);
-		sem_close(args.full_sem);
-		sem_close(args.death_sem);
-	}
+	id_str = ft_uitoa(id);
+	full_name = ft_strjoin(name, id_str);
+	free (id_str);
+	sem = sem_open(full_name, O_CREAT, 0644, value);
+	if (sem == SEM_FAILED)
+		return (free (full_name), NULL);
+	sem_unlink(full_name);
+	free (full_name);
+	return (sem);
 }

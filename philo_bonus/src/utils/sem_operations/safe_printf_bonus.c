@@ -3,32 +3,32 @@
 /*                                                        :::      ::::::::   */
 /*   safe_printf_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 11:50:34 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/25 19:08:47 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 14:02:27 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-
-int safe_single_printf(char *string, t_args *args)
+int safe_single_printf(char *string, t_philo *philo)
 {
-	if (safe_mutex_lock(&args->printf_mutex, args))
+	if (safe_sem_wait(philo->printf_sem))
 		return (1);
 	printf("%s", string);
-	if (safe_mutex_unlock(&args->printf_mutex, args))
+	if (safe_sem_post(philo->printf_sem))
 		return (1);
 	return (0);
 }
 
-int safe_log_printf(char *string, size_t id, t_args *args)
+int safe_log_printf(char *string, unsigned int id, t_philo *philo)
 {
-	if (safe_mutex_lock(&args->printf_mutex, args))
+	if (safe_sem_wait(philo->printf_sem))
 		return (1);
-	printf(string,  get_time_ms() - args->epoch, id);
-	if (safe_mutex_unlock(&args->printf_mutex, args))
+	printf(string,  get_time_ms() - philo->args->epoch, id);
+	if (safe_sem_post(philo->printf_sem))
 		return (1);
 	return (0);
 }
+

@@ -43,6 +43,8 @@
 		"philosophers.h": "c",
 		"colors.h": "c",
 		"numbers": "c",
-		"stdlib.h": "c"
+		"stdlib.h": "c",
+		"colors_bonus.h": "c",
+		"philosophers_bonus.h": "c"
 	}
 }

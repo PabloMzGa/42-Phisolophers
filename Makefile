@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+         #
+#    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/06/25 18:44:34 by pabmart2         ###   ########.fr        #
+#    Updated: 2025/06/26 14:15:09 by pablo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CFLAGS = -Wall -Wextra -Werror -pthread
 DEBUG_FLAGS = -g -fno-inline -gdwarf-4
 ASAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=address
 TSAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=thread
+
 BUILD_DIR = build
 
 OBJ_DIR = build/obj
@@ -103,39 +104,57 @@ $(OBJ) : $(OBJ_DIR)/%.o : %.c $(HEADERS)
 #################################### BONUS #####################################
 
 # Variables para el bonus
-BONUS_BUILD_DIR = build
-BONUS_OBJ_DIR = build/obj_bonus
+BONUS_BUILD_DIR = build_bonus
+
+BONUS_OBJ_DIR = build_bonus/obj
+
 BONUS_NAME = philo_bonus
+
 BONUS_HEADERS = \
 	philo_bonus/include/philosophers_bonus.h \
 	philo_bonus/include/colors_bonus.h
+
 BONUS_SRC = \
 	philo_bonus/src/main_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_behaviour_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_death_bonus.c \
+	philo_bonus/src/philo_behaviour/philo_death_monitor_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_eat_bonus.c \
-	philo_bonus/src/philo_behaviour/philo_monitor_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_sleep_think_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_start_bonus.c \
-	philo_bonus/src/utils/get_time_ms_bonus.c \
-	philo_bonus/src/utils/arg_check_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atol_bonus.c \
-	philo_bonus/src/utils/args_parse/ft_atosize_t_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atoui_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_bzero_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_calloc_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_isdigit_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_isspace_bonus.c \
-	philo_bonus/src/philo_helpers/clean_philo_bonus.c \
-	philo_bonus/src/philo_helpers/create_philo_bonus.c \
-	philo_bonus/src/philo_helpers/philo_populate_bonus.c
+	philo_bonus/src/utils/args_parse/ft_memcpy_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_strdup_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_strjoin_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_strlcat_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_strlen_bonus.c \
+	philo_bonus/src/utils/args_parse/ft_uitoa_bonus.c \
+	philo_bonus/src/utils/misc/arg_check_bonus.c \
+	philo_bonus/src/utils/misc/get_sem_numbered_bonus.c \
+	philo_bonus/src/utils/misc/get_time_ms_bonus.c \
+	philo_bonus/src/utils/misc/set_args_bonus.c \
+	philo_bonus/src/utils/philo_helpers/clean_philo_bonus.c \
+	philo_bonus/src/utils/philo_helpers/create_philo_bonus.c \
+	philo_bonus/src/utils/philo_helpers/philo_populate_bonus.c \
+	philo_bonus/src/utils/sem_operations/safe_printf_bonus.c \
+	philo_bonus/src/utils/sem_operations/safe_sem_bonus.c \
+
 BONUS_OBJ = $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SRC:.c=.o))
+
 BONUS_INCLUDES = -Iphilo_bonus/include
 
 bonus: $(BONUS_NAME)
-	@echo "\033[35mBonus compiled!\033[0m"
 
 $(BONUS_NAME): $(BONUS_OBJ)
 	@mkdir -p $(BONUS_BUILD_DIR)
 	@$(CC) $(CFLAGS) $(BONUS_OBJ) -o $(BONUS_BUILD_DIR)/$(BONUS_NAME) $(BONUS_INCLUDES)
-	@echo "\033[32m\n¡$(BONUS_NAME) compiled! ᕦ(\033[36m⌐■\033[32m_\033[36m■\033[32m)ᕤ\n"
+	@echo "\033[32m\n¡$(BONUS_NAME) compiled! \
+	ᕦ(\033[36m⌐■\033[32m_\033[36m■\033[32m)ᕤ\n"
 
 $(BONUS_OBJ) : $(BONUS_OBJ_DIR)/%.o : %.c $(BONUS_HEADERS)
 	@mkdir -p $(dir $@)

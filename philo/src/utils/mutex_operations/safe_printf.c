@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   safe_printf.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 11:50:34 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/25 13:35:50 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 12:17:19 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int safe_single_printf(char *string, t_args *args)
 	return (0);
 }
 
-int safe_log_printf(char *string, size_t id, t_args *args)
+int safe_log_printf(char *string, unsigned int id, t_args *args)
 {
 	if (safe_mutex_lock(&args->printf_mutex, args))
 		return (1);

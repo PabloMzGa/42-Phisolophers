@@ -3,28 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   usleep_check.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 16:23:38 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/25 18:00:53 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 12:38:06 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-/**
- * @brief Sleeps for a specified amount of time in ms, checking periodically
- *        if the simulation is still running.
- *
- * This function divides the total sleep time into smaller intervals
- * (MICROSLEEP_MS) and after each interval, checks if the simulation
- * should continue running by calling get_simulation_running(args).
- * If the simulation is no longer running, the function returns early.
- *
- * @param sleep The total time to sleep in milliseconds.
- * @param args Pointer to the simulation arguments structure, used to check
- *             simulation state.
- */
 void usleep_check(unsigned int sleep, t_args *args)
 {
 	unsigned int sleep_counter;

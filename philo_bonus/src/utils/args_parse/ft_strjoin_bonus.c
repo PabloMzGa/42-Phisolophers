@@ -1,36 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:41:00 by pablo            ###   ########.fr       */
+/*   Created: 2025/06/26 12:01:44 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/26 14:05:16 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-// TODO: Proteger los printf con un mutex
-
-int	main(int argc, char *argv[])
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	t_args	args;
-	t_philo	*philo;
+	unsigned int	len;
+	char	*joined;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	philo = populate_philosophers(&args);
-	if (philo)
-		start_philosophers_behaviour(philo);
-	else
-	{
-		sem_close(args.forks_sem);
-		sem_close(args.full_sem);
-		sem_close(args.death_sem);
-	}
+	if (!s1 && s2)
+		return (ft_strdup(s2));
+	else if (s1 && !s2)
+		return (ft_strdup(s1));
+	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	joined = malloc(sizeof(char) * len);
+	if (!joined)
+		return (NULL);
+	joined[0] = '\0';
+	ft_strlcat(joined, s1, len);
+	ft_strlcat(joined, s2, len);
+	return (joined);
 }

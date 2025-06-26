@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_monitor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:47:45 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 12:16:57 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static int	should_continue(t_philo *philos, int all_full, int someone_died)
 static int	check_all_philosophers(t_philo *philos, int *all_full)
 {
 	t_philo	*current_philo;
-	size_t	i;
+	unsigned int	i;
 	int		someone_died;
 	int		status;
 

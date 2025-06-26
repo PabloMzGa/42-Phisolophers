@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_start.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:38:09 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:47:48 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 12:17:10 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 void	wait_philo_end(t_philo *philos)
 {
 	t_philo	*current_philo;
-	size_t	i;
+	unsigned int	i;
 
 	current_philo = philos;
 	i = 0;
@@ -53,7 +53,7 @@ void	wait_philo_end(t_philo *philos)
 static int	start_loop(t_philo *philos)
 {
 	t_philo	*current_philo;
-	size_t	i;
+	unsigned int	i;
 
 	current_philo = philos;
 	i = 0;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_start_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/25 18:08:51 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 13:57:54 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@
 
 void	start_philosophers_behaviour(t_philo *philo)
 {
-	pthread_t	monitor_thread;
+	//pthread_t	monitor_thread;
 
 	philosopher_behaviour(philo);
 }
