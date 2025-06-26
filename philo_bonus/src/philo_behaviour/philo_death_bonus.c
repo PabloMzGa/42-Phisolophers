@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 14:06:52 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 20:50:32 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,41 +44,20 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 	elapsed = current_time - last_meal;
 	if (elapsed > philo->args->time_die)
 		dead = 1;
+	/**/
 	if (dead)
 	{
-		safe_log_printf("%10u" BOLD MAGENTA " %u" RESET RED " has died\n" RESET,
-			philo->id, philo);
-		//set_simulation_running(philo->args, 0);
+		safe_log_printf("%10u" BOLD MAGENTA
+			"%u" RESET RED " has died" RESET "\n", philo->id, philo->args);
+		// set_simulation_running(philo->args, 0);
 	}
 	return (dead);
 }
 
-/**
- * @brief Safely retrieves the last meal timestamp of a philosopher.
- *
- * This function acquires a semaphore to ensure exclusive access to the
- * philosopher's last meal timestamp, copies its value to the provided pointer,
- * and then releases the semaphore. This prevents race conditions when multiple
- * processes or threads may access or modify the timestamp concurrently.
- *
- * @param philo Pointer to the philosopher structure whose last meal timestamp
- *              is to be retrieved.
- * @param last_meal Pointer to a long where the retrieved timestamp will be
- *                  stored.
- * @return Always returns 0.
- */
-static int	get_last_meal(t_philo *philo, long *last_meal)
-{
-	safe_sem_wait(philo->last_meal_sem);
-	*last_meal = philo->last_meal_timestamp;
-	safe_sem_post(philo->last_meal_sem);
-	return (0);
-}
-
 int	check_philo_death(t_philo *philo)
 {
-	long	current_time;
-	long	last_meal;
+	long			current_time;
+	unsigned int	last_meal;
 
 	current_time = get_time_ms();
 	if (get_last_meal(philo, &last_meal))

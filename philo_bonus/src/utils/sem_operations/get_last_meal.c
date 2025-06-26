@@ -1,31 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   get_last_meal.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 15:06:46 by pablo            ###   ########.fr       */
+/*   Created: 2025/06/26 20:42:10 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/26 20:51:17 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+int	get_last_meal(t_philo *philo, unsigned int *last_meal)
 {
-	t_philo	*philo;
-
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->args = args;
-	philo->status = HUNGRY;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", id, 1);
-	if (philo->last_meal_sem == NULL)
-		return (NULL);
-	return (philo);
+	safe_sem_wait(philo->last_meal_sem);
+	*last_meal = philo->last_meal_timestamp;
+	safe_sem_post(philo->last_meal_sem);
+	return (0);
 }

@@ -1,31 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   add_philo_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 15:06:46 by pablo            ###   ########.fr       */
+/*   Created: 2025/05/07 21:24:26 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/26 19:25:49 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+void	add_philo(t_philo **philo_lst, t_philo *new)
 {
-	t_philo	*philo;
+	t_philo	*temp;
 
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->args = args;
-	philo->status = HUNGRY;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", id, 1);
-	if (philo->last_meal_sem == NULL)
-		return (NULL);
-	return (philo);
+	if (!philo_lst || !new)
+		return ;
+	if (*philo_lst == NULL)
+	{
+		*philo_lst = new;
+		return ;
+	}
+	temp = *philo_lst;
+	while (temp && temp->next)
+		temp = temp->next;
+	temp->next = new;
 }

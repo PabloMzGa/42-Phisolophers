@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 19:40:55 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:23:16 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 20:58:06 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,11 +33,17 @@ int	safe_sem_post(sem_t *sem)
 {
 	int	status;
 
-	status = sem_post(sem);
-	if (status != 0)
+	//TODO: Helgrind dice que hay veces que se hace el post estando sem en NULL
+	//Tengo que averiguar en que momento pasa eso, y de ser relevante,
+	//controlar el error con return 1.
+	if (sem)
 	{
-		printf(RED "Error: sem_post failed with code %d\n" RESET, status);
-		return (1);
+		status = sem_post(sem);
+		if (status != 0)
+		{
+			printf(RED "Error: sem_post failed with code %d\n" RESET, status);
+			return (1);
+		}
 	}
 	return (0);
 }

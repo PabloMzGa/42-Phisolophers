@@ -6,12 +6,13 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 21:22:16 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 14:01:41 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 20:16:25 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
+
 
 /**
  * @brief Main behaviour loop for a philosopher.

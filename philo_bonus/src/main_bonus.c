@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:41:00 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 20:07:42 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,14 @@ int	main(int argc, char *argv[])
 	if (set_args(&args, argc, argv))
 		return (1);
 	philo = populate_philosophers(&args);
-	if (philo)
+	if (philo && philo->pid == 0)
 		start_philosophers_behaviour(philo);
-	else
-	{
-		sem_close(args.forks_sem);
-		sem_close(args.full_sem);
-		sem_close(args.death_sem);
-	}
+	if (args.n_eat > 0)
+		start_full_monitor(philo);
+	while (waitpid(-1, NULL, 0) > 0)
+		;
+	sem_close(args.forks_sem);
+	sem_close(args.full_sem);
+	sem_close(args.death_sem);
+	return (0);
 }

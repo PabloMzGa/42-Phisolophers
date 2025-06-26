@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 13:47:19 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 20:51:31 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,10 +17,12 @@
 # include <limits.h>
 # include <pthread.h>
 # include <semaphore.h>
+# include <signal.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/time.h>
+# include <sys/wait.h>
 # include <unistd.h>
 
 //////////////////////////////////// ENUMS /////////////////////////////////////
@@ -36,34 +38,36 @@ typedef enum e_philo_status
 {
 	HUNGRY = 0,
 	FULL = 1
-}					t_status;
+}							t_status;
 
 //////////////////////////////////// STRUCS ////////////////////////////////////
 
 typedef struct s_args_info
 {
-	unsigned int	philo_n;
-	unsigned int	time_die;
-	unsigned int	time_eat;
-	unsigned int	time_sleep;
-	unsigned int	n_eat;
-	unsigned int	epoch;
-	sem_t			*forks_sem;
-	sem_t			*death_sem;
-	sem_t			*full_sem;
-}					t_args;
+	unsigned int			philo_n;
+	unsigned int			time_die;
+	unsigned int			time_eat;
+	unsigned int			time_sleep;
+	unsigned int			n_eat;
+	unsigned int			epoch;
+	sem_t					*forks_sem;
+	sem_t					*death_sem;
+	sem_t					*full_sem;
+	sem_t					*stop_sem;
+	sem_t					*printf_sem;
+}							t_args;
 
 typedef struct s_philosopher
 {
-	unsigned int	id;
-	unsigned int	n_eat;
-	unsigned int	last_meal_timestamp;
-	sem_t			*printf_sem;
-	sem_t			*last_meal_sem;
-	pid_t			pid;
-	t_status		status;
-	t_args			*args;
-}					t_philo;
+	unsigned int			id;
+	unsigned int			n_eat;
+	unsigned int			last_meal_timestamp;
+	struct s_philosopher	*next;
+	sem_t					*last_meal_sem;
+	pid_t					pid;
+	t_status				status;
+	t_args					*args;
+}							t_philo;
 
 /////////////////////////////// PHILO BEHAVIOUR ////////////////////////////////
 
@@ -78,7 +82,7 @@ typedef struct s_philosopher
  * @param philo Pointer to the philosopher to check.
  * @return int 1 if the philosopher has died, 0 otherwise
  */
-int					check_philo_death(t_philo *philo);
+int							check_philo_death(t_philo *philo);
 
 /**
  * @brief Executes the main behaviour routine for a philosopher.
@@ -90,7 +94,7 @@ int					check_philo_death(t_philo *philo);
  * @param philo Pointer to the philosopher structure containing its state and
  *              arguments.
  */
-void				philosopher_behaviour(t_philo *philo);
+void						philosopher_behaviour(t_philo *philo);
 
 /**
  * @brief Simulates the eating behavior of a philosopher.
@@ -105,7 +109,7 @@ void				philosopher_behaviour(t_philo *philo);
  * @param philo Pointer to the philosopher structure containing state
  * and arguments.
  */
-void				philosopher_eat(t_philo *philo);
+void						philosopher_eat(t_philo *philo);
 
 /**
  * @brief Makes the philosopher sleep for a specified duration and then think.
@@ -118,9 +122,9 @@ void				philosopher_eat(t_philo *philo);
  * @param philo Pointer to the philosopher structure containing its state
  * and arguments.
  */
-void				philosopher_sleep_think(t_philo *philo);
+void						philosopher_sleep_think(t_philo *philo);
 
-void				start_philosophers_behaviour(t_philo *philo);
+void						start_philosophers_behaviour(t_philo *philo);
 
 /**
  * @brief Starts the death monitor threads for the philosophers.
@@ -138,7 +142,20 @@ void				start_philosophers_behaviour(t_philo *philo);
  * monitor threads.
  * @return int Returns 0 on success, or 1 if thread creation fails.
  */
-int					start_death_monitors(t_philo *philos);
+int							start_death_monitors(t_philo *philos);
+
+/**
+ * @brief Starts a monitor thread to check if all philosophers are full.
+ *
+ * This function creates a new thread that runs the full_stop_monitor function,
+ * passing the given philosopher structure as an argument. The thread is
+ * detached immediately after creation, so its resources are automatically
+ * released upon completion.
+ *
+ * @param philo Pointer to the philosopher structure to be monitored.
+ * @return int Returns 0 on success, or 1 if thread creation fails.
+ */
+int							start_full_monitor(t_philo *philo);
 
 ///////////////////////////////// UTILS - MISC /////////////////////////////////
 
@@ -155,7 +172,7 @@ int					start_death_monitors(t_philo *philos);
  * @param argv The argument vector.
  * @return int Returns 0 if the arguments are invalid, 1 otherwise.
  */
-int					check_args(int argc, char *argv[]);
+int							check_args(int argc, char *argv[]);
 
 /**
  * @brief Creates or opens a numbered POSIX semaphore with a unique name.
@@ -171,7 +188,8 @@ int					check_args(int argc, char *argv[]);
  * @param value The initial value for the semaphore if it is created.
  * @return A pointer to the opened semaphore, or NULL on failure.
  */
-sem_t				*get_sem_numbered(char *name, unsigned int id, int value);
+sem_t						*get_sem_numbered(char *name, unsigned int id,
+								int value);
 
 /**
  * @brief Gets the current time in milliseconds.
@@ -181,7 +199,7 @@ sem_t				*get_sem_numbered(char *name, unsigned int id, int value);
  *
  * @return The current time in milliseconds as a long integer.
  */
-unsigned int		get_time_ms(void);
+unsigned int				get_time_ms(void);
 
 /**
  * @brief Initializes the simulation arguments and named semaphores.
@@ -196,18 +214,49 @@ unsigned int		get_time_ms(void);
  * @param argv Argument vector from main.
  * @return int Returns 0 on success, or 1 on failure to initialize semaphores.
  */
-int					set_args(t_args *args, int argc, char *argv[]);
+int							set_args(t_args *args, int argc, char *argv[]);
 
 //////////////////////////// UTILS - SEM OPERATIOS /////////////////////////////
 
-int					safe_sem_wait(sem_t *sem);
+int							safe_sem_wait(sem_t *sem);
 
-int					safe_sem_post(sem_t *sem);
+int							safe_sem_post(sem_t *sem);
 
-int					safe_single_printf(char *string, t_philo *philo);
+int							safe_single_printf(char *string, t_args *args);
 
-int					safe_log_printf(char *string, unsigned int id,
-						t_philo *philo);
+int							safe_log_printf(char *string, unsigned int id,
+								t_args *args);
+/**
+ * @brief Safely retrieves the last meal timestamp of a philosopher.
+ *
+ * This function acquires a semaphore to ensure exclusive access to the
+ * philosopher's last meal timestamp, copies its value to the provided pointer,
+ * and then releases the semaphore. This prevents race conditions when multiple
+ * processes or threads may access or modify the timestamp concurrently.
+ *
+ * @param philo Pointer to the philosopher structure whose last meal timestamp
+ *              is to be retrieved.
+ * @param last_meal Pointer to a int where the retrieved timestamp will be
+ *                  stored.
+ * @return Always returns 0.
+ */
+int							get_last_meal(t_philo *philo,
+								unsigned int *last_meal);
+
+int							set_last_meal(t_philo *philo, unsigned int last_meal);
+
+/**
+ * @brief Waits on the stop semaphore for each philosopher.
+ *
+ * This function iterates through the number of philosophers and performs a wait
+ * operation on the stop semaphore for each one. It is typically used to ensure
+ * that all philosopher processes have reached a certain stopping point before
+ * proceeding.
+ *
+ * @param args Pointer to the arguments structure containing the number of
+ * philosophers and the stop semaphore.
+ */
+void						set_stop_sem(t_args *args);
 
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
 
@@ -223,7 +272,7 @@ int					safe_log_printf(char *string, unsigned int id,
  * @param nptr The string to convert.
  * @return The converted unsigned integer value, or 0 if the input is negative.
  */
-unsigned int		ft_atoui(const char *nptr);
+unsigned int				ft_atoui(const char *nptr);
 
 /**
  * @brief Converts a string to a long integer.
@@ -241,7 +290,7 @@ unsigned int		ft_atoui(const char *nptr);
  * @note This function assumes that the input string is well-formed and does
  *       not handle overflow or invalid input errors.
  */
-long				ft_atol(const char *nptr);
+long						ft_atol(const char *nptr);
 
 /**
  * Sets the first n bytes of the memory pointed to by s to zero.
@@ -249,7 +298,7 @@ long				ft_atol(const char *nptr);
  * @param s Pointer to the memory to be zeroed.
  * @param n Number of bytes to be zeroed.
  */
-void				ft_bzero(void *s, size_t n);
+void						ft_bzero(void *s, size_t n);
 
 /**
  * @brief Allocates memory for an array of elements and initializes them to 0.
@@ -266,7 +315,7 @@ void				ft_bzero(void *s, size_t n);
  *
  * @note If memory allocation fails, errno is set to ENOMEM.
  */
-void				*ft_calloc(size_t nmemb, size_t size);
+void						*ft_calloc(size_t nmemb, size_t size);
 
 /**
  * Checks if the given character is numeric.
@@ -274,7 +323,7 @@ void				*ft_calloc(size_t nmemb, size_t size);
  * @param c The character to be checked.
  * @return 1 if the character is numeric, 0 otherwise.
  */
-int					ft_isdigit(int c);
+int							ft_isdigit(int c);
 
 /**
  * @brief Checks if a character is a whitespace character.
@@ -287,7 +336,7 @@ int					ft_isdigit(int c);
  * @param c The character to check.
  * @return 1 if the character is a whitespace character, 0 otherwise.
  */
-int					ft_isspace(char c);
+int							ft_isspace(char c);
 
 /**
  * @brief Copies a block of memory from a source address to a destination
@@ -302,7 +351,7 @@ int					ft_isspace(char c);
  * @param n Number of bytes to be copied.
  * @return Pointer to the destination memory area (`dest`).
  */
-void				*ft_memcpy(void *dest, const void *src, size_t n);
+void						*ft_memcpy(void *dest, const void *src, size_t n);
 
 /**
  * @brief Duplicates a string.
@@ -315,7 +364,7 @@ void				*ft_memcpy(void *dest, const void *src, size_t n);
  * @return A pointer to the duplicated string, or NULL if insufficient memory
  *         was available.
  */
-char				*ft_strdup(const char *s);
+char						*ft_strdup(const char *s);
 
 /**
  * @brief Concatenates two strings into a new string.
@@ -329,7 +378,7 @@ char				*ft_strdup(const char *s);
  * @return A pointer to the newly allocated string containing the
  * concatenated result of `s1` and `s2`, or NULL if memory allocation fails.
  */
-char				*ft_strjoin(char const *s1, char const *s2);
+char						*ft_strjoin(char const *s1, char const *s2);
 
 /**
  * Appends the string pointed to by `src` to the end of the string pointed to
@@ -343,7 +392,7 @@ char				*ft_strjoin(char const *s1, char const *s2);
  *         `size` was large enough. If the return value is greater than or
  *         equal to `size`, truncation occurred.
  */
-size_t				ft_strlcat(char *dst, const char *src, size_t size);
+size_t						ft_strlcat(char *dst, const char *src, size_t size);
 
 /**
  * Calculates the length of a null-terminated string.
@@ -351,7 +400,7 @@ size_t				ft_strlcat(char *dst, const char *src, size_t size);
  * @param str The string to calculate the length of.
  * @return The length of the string.
  */
-size_t				ft_strlen(const char *str);
+size_t						ft_strlen(const char *str);
 
 /**
  * @brief Converts an unsigned integer to a null-terminated string.
@@ -364,9 +413,22 @@ size_t				ft_strlen(const char *str);
  * @return A pointer to the newly allocated string representing the number,
  *         or NULL if memory allocation fails.
  */
-char				*ft_uitoa(unsigned int n);
+char						*ft_uitoa(unsigned int n);
 
 ////////////////////////// UTILS - PHILO LIST HELPERS //////////////////////////
+
+/**
+ * @brief Adds a new philosopher node to the end of the philosopher list.
+ *
+ * This function appends the given 'new' philosopher node to the end of the
+ * doubly linked list pointed to by 'philo_lst'. If the list is empty,
+ * 'new' becomes the first node. If either 'philo_lst' or 'new' is NULL,
+ * the function does nothing.
+ *
+ * @param philo_lst Pointer to the head pointer of the philosopher list.
+ * @param new Pointer to the new philosopher node to be added.
+ */
+void						add_philo(t_philo **philo_lst, t_philo *new);
 
 /**
  * @brief Cleans up resources associated with a philosopher.
@@ -377,7 +439,7 @@ char				*ft_uitoa(unsigned int n);
  *
  * @param philo Pointer to the philosopher structure to be cleaned up.
  */
-void				clean_philo(t_philo *philo);
+void						clean_philo(t_philo *philo);
 
 /**
  * @brief Creates and initializes a new philosopher structure.
@@ -392,7 +454,7 @@ void				clean_philo(t_philo *philo);
  * @return      Pointer to the newly created t_philo structure, or NULL if
  *              memory allocation fails.
  */
-t_philo				*create_philo(unsigned int id, t_args *args);
+t_philo						*create_philo(unsigned int id, t_args *args);
 
 /**
  * @brief Populates philosopher structures and forks processes for each.
@@ -407,6 +469,6 @@ t_philo				*create_philo(unsigned int id, t_args *args);
  * @return t_philo* Pointer to philosopher structure in the child process,
  *                  or NULL if all philosophers are created in the parent.
  */
-t_philo				*populate_philosophers(t_args *args);
+t_philo						*populate_philosophers(t_args *args);
 
 #endif

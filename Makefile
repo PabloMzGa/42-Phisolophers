@@ -6,7 +6,7 @@
 #    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/06/26 14:15:09 by pablo            ###   ########.fr        #
+#    Updated: 2025/06/26 20:51:03 by pablo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -70,15 +70,6 @@ debug-asan: clean $(NAME)
 debug-tsan: CFLAGS += $(TSAN_FLAGS)
 debug-tsan: clean $(NAME)
 
-HELGRIND_CC = gcc
-HELGRIND_FLAGS = -g -gdwarf-4 -fno-inline
-
-debug-helgrind: CC := $(HELGRIND_CC)
-debug-helgrind: CFLAGS := $(HELGRIND_FLAGS) $(CFLAGS)
-debug-helgrind: clean $(NAME)
-
-
-
 clean:
 	@rm -rf $(OBJ_DIR)
 	@echo "\033[31mObject files removed\033[0m"
@@ -118,10 +109,11 @@ BONUS_SRC = \
 	philo_bonus/src/main_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_behaviour_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_death_bonus.c \
-	philo_bonus/src/philo_behaviour/philo_death_monitor_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_eat_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_sleep_think_bonus.c \
 	philo_bonus/src/philo_behaviour/philo_start_bonus.c \
+	philo_bonus/src/philo_monitor/death_monitor_bonus.c \
+	philo_bonus/src/philo_monitor/full_monitor_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atol_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atoui_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_bzero_bonus.c \
@@ -138,17 +130,24 @@ BONUS_SRC = \
 	philo_bonus/src/utils/misc/get_sem_numbered_bonus.c \
 	philo_bonus/src/utils/misc/get_time_ms_bonus.c \
 	philo_bonus/src/utils/misc/set_args_bonus.c \
+	philo_bonus/src/utils/philo_helpers/add_philo_bonus.c \
 	philo_bonus/src/utils/philo_helpers/clean_philo_bonus.c \
 	philo_bonus/src/utils/philo_helpers/create_philo_bonus.c \
-	philo_bonus/src/utils/philo_helpers/philo_populate_bonus.c \
+	philo_bonus/src/utils/philo_helpers/populate_philo_bonus.c \
+	philo_bonus/src/utils/sem_operations/get_last_meal.c \
 	philo_bonus/src/utils/sem_operations/safe_printf_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_sem_bonus.c \
+	philo_bonus/src/utils/sem_operations/set_stop_sem.c \
+	philo_bonus/src/utils/sem_operations/set_last_meal.c \
 
 BONUS_OBJ = $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SRC:.c=.o))
 
 BONUS_INCLUDES = -Iphilo_bonus/include
 
 bonus: $(BONUS_NAME)
+
+bonus-debug: CFLAGS += $(DEBUG_FLAGS)
+bonus-debug: bonus-clean $(BONUS_NAME)
 
 $(BONUS_NAME): $(BONUS_OBJ)
 	@mkdir -p $(BONUS_BUILD_DIR)
@@ -171,6 +170,7 @@ bonus-fclean: bonus-clean
 
 bonus-re: bonus-fclean
 	$(MAKE) bonus
+
 
 ################################################
 .PHONY: all debug debug-asan debug-tsan debug-helgrind clean fclean re bonus bonus-clean bonus-fclean bonus-re

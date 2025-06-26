@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_death_monitor_bonus.c                        :+:      :+:    :+:   */
+/*   death_monitor_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 14:03:33 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/26 15:35:57 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,19 @@
 #include "philosophers_bonus.h"
 
 /**
- * @brief Monitors the death status of a philosopher in a separate thread.
+ * @brief Monitors the death status of a philosopher in a concurrent
+ * environment.
  *
- * This function continuously checks if the philosopher has died by calling
- * check_philo_death(). Once the philosopher is detected as dead, it posts
- * to the death semaphore for each philosopher to signal the event.
+ * This function runs in a separate thread or process and continuously
+ * checks whether the given philosopher has died by calling
+ * `check_philo_death()`. It uses semaphores to safely access shared
+ * state. When a philosopher is detected as dead, it sets the stop
+ * semaphore and signals the death semaphore for all philosophers to
+ * notify them of the event.
  *
- * @param args Pointer to the philosopher structure (t_philo *).
- * @return NULL Always returns NULL.
+ * @param args Pointer to a t_philo structure representing the philosopher
+ *             to monitor.
+ * @return Always returns NULL.
  */
 static void	*death_monitor(void *args)
 {
@@ -33,12 +38,17 @@ static void	*death_monitor(void *args)
 	is_dead = 0;
 	counter = 0;
 	while (!is_dead)
+	{
+		safe_sem_wait(philo->args->stop_sem);
 		is_dead = check_philo_death(philo);
+		safe_sem_post(philo->args->stop_sem);
+	}
 	while (counter < philo->args->philo_n)
 	{
 		safe_sem_post(philo->args->death_sem);
 		++counter;
 	}
+	set_stop_sem(philo->args);
 	return (NULL);
 }
 
@@ -61,20 +71,23 @@ static void	*death_stop_monitor(void *args)
 
 	philo = (t_philo *)args;
 	sem_wait(philo->args->death_sem);
+	clean_philo(philo);
 	exit(0);
 	return (NULL);
 }
 
 int	start_death_monitors(t_philo *philo)
 {
-	pthread_t death_monitor_id;
-	pthread_t death_stop_monitor_id;
+	pthread_t	death_monitor_id;
+	pthread_t	death_stop_monitor_id;
+
 	if (pthread_create(&death_monitor_id, NULL, death_monitor, philo) != 0)
 	{
 		printf(RED "Error: Failed to create death monitor thread\n" RESET);
 		return (1);
 	}
-	if (pthread_create(&death_stop_monitor_id, NULL, death_stop_monitor, philo) != 0)
+	if (pthread_create(&death_stop_monitor_id, NULL, death_stop_monitor,
+			philo) != 0)
 	{
 		printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
 		return (1);

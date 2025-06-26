@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_sleep_think_bonus.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:55:37 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:42:13 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/06/26 15:37:27 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,9 @@
 
 void	philosopher_sleep_think(t_philo *philo)
 {
-	printf("%10u" BOLD MAGENTA " %u" RESET BLUE " is sleeping\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET BLUE " is sleeping" RESET
+		"\n", philo->id, philo->args);
 	usleep(philo->args->time_sleep * 1000);
-	printf("%10u " BOLD MAGENTA "%u" RESET BRIGHT_CYAN " is thinking\n" RESET,
-		get_time_ms() - philo->args->epoch, philo->id);
+	safe_log_printf("%10u " BOLD MAGENTA "%u" RESET BRIGHT_CYAN " is thinking"
+		RESET "\n", philo->id, philo->args);
 }
