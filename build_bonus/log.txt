@@ -1,0 +1,369 @@
+==2278336== Memcheck, a memory error detector
+==2278336== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==2278336== Using Valgrind-3.18.1 and LibVEX; rerun with -h for copyright info
+==2278336== Command: ./philo_bonus 5 600 200 200
+==2278336== Parent PID: 2244641
+==2278336== 
+==2278336== 
+==2278336== HEAP SUMMARY:
+==2278336==     in use at exit: 334 bytes in 10 blocks
+==2278336==   total heap usage: 14 allocs, 4 frees, 558 bytes allocated
+==2278336== 
+==2278336== 24 bytes in 1 blocks are still reachable in loss record 1 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4993F34: tsearch (tsearch.c:337)
+==2278336==    by 0x49107A1: __sem_check_add_mapping (sem_routines.c:121)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40253C: set_sems (set_args_bonus.c:43)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 24 bytes in 1 blocks are still reachable in loss record 2 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4993F9E: tsearch (tsearch.c:337)
+==2278336==    by 0x49107A1: __sem_check_add_mapping (sem_routines.c:121)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40258E: set_sems (set_args_bonus.c:47)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 24 bytes in 1 blocks are still reachable in loss record 3 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4993F9E: tsearch (tsearch.c:337)
+==2278336==    by 0x49107A1: __sem_check_add_mapping (sem_routines.c:121)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x4025ED: set_sems (set_args_bonus.c:51)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 24 bytes in 1 blocks are still reachable in loss record 4 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4993F9E: tsearch (tsearch.c:337)
+==2278336==    by 0x49107A1: __sem_check_add_mapping (sem_routines.c:121)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40265D: set_sems (set_args_bonus.c:55)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 24 bytes in 1 blocks are still reachable in loss record 5 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4993F9E: tsearch (tsearch.c:337)
+==2278336==    by 0x49107A1: __sem_check_add_mapping (sem_routines.c:121)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x4026DA: set_sems (set_args_bonus.c:60)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 42 bytes in 1 blocks are still reachable in loss record 6 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4910728: __sem_check_add_mapping (sem_routines.c:104)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40258E: set_sems (set_args_bonus.c:47)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 42 bytes in 1 blocks are still reachable in loss record 7 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4910728: __sem_check_add_mapping (sem_routines.c:104)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40265D: set_sems (set_args_bonus.c:55)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 43 bytes in 1 blocks are still reachable in loss record 8 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4910728: __sem_check_add_mapping (sem_routines.c:104)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x40253C: set_sems (set_args_bonus.c:43)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 43 bytes in 1 blocks are still reachable in loss record 9 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4910728: __sem_check_add_mapping (sem_routines.c:104)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x4025ED: set_sems (set_args_bonus.c:51)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== 44 bytes in 1 blocks are still reachable in loss record 10 of 10
+==2278336==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278336==    by 0x4910728: __sem_check_add_mapping (sem_routines.c:104)
+==2278336==    by 0x491043B: sem_open@@GLIBC_2.34 (sem_open.c:192)
+==2278336==    by 0x4026DA: set_sems (set_args_bonus.c:60)
+==2278336==    by 0x402810: set_args (set_args_bonus.c:79)
+==2278336==    by 0x401266: main (main_bonus.c:25)
+==2278336== 
+==2278336== LEAK SUMMARY:
+==2278336==    definitely lost: 0 bytes in 0 blocks
+==2278336==    indirectly lost: 0 bytes in 0 blocks
+==2278336==      possibly lost: 0 bytes in 0 blocks
+==2278336==    still reachable: 334 bytes in 10 blocks
+==2278336==         suppressed: 0 bytes in 0 blocks
+==2278336== 
+==2278336== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==2278337== 
+==2278337== HEAP SUMMARY:
+==2278337==     in use at exit: 544 bytes in 2 blocks
+==2278337==   total heap usage: 18 allocs, 16 frees, 2,048 bytes allocated
+==2278337== 
+==2278340== Thread 2:
+==2278340== Invalid read of size 4
+==2278340==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278340==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278340==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278340==    by 0x401491: check_death_conditions (philo_death_bonus.c:50)
+==2278340==    by 0x4013FA: check_philo_death (philo_death_bonus.c:65)
+==2278340==    by 0x401761: death_monitor (death_monitor_bonus.c:43)
+==2278340==    by 0x4908AC2: start_thread (pthread_create.c:442)
+==2278340==    by 0x4999A03: clone (clone.S:100)
+==2278340==  Address 0x485e008 is not stack'd, malloc'd or (recently) free'd
+==2278340== 
+==2278340== 
+==2278340== Process terminating with default action of signal 11 (SIGSEGV)
+==2278340==  Access not within mapped region at address 0x485E008
+==2278340==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278340==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278340==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278340==    by 0x401491: check_death_conditions (philo_death_bonus.c:50)
+==2278340==    by 0x4013FA: check_philo_death (philo_death_bonus.c:65)
+==2278340==    by 0x401761: death_monitor (death_monitor_bonus.c:43)
+==2278340==    by 0x4908AC2: start_thread (pthread_create.c:442)
+==2278340==    by 0x4999A03: clone (clone.S:100)
+==2278340==  If you believe this happened as a result of a stack
+==2278340==  overflow in your program's main thread (unlikely but
+==2278340==  possible), you can try to increase the size of the
+==2278340==  main thread stack using the --main-stacksize= flag.
+==2278340==  The main thread stack size used in this run was 8388608.
+==2278340== 
+==2278340== HEAP SUMMARY:
+==2278340==     in use at exit: 1,568 bytes in 3 blocks
+==2278340==   total heap usage: 21 allocs, 18 frees, 2,216 bytes allocated
+==2278340== 
+==2278339== 
+==2278339== HEAP SUMMARY:
+==2278339==     in use at exit: 544 bytes in 2 blocks
+==2278339==   total heap usage: 20 allocs, 18 frees, 2,160 bytes allocated
+==2278339== 
+==2278337== 272 bytes in 1 blocks are possibly lost in loss record 1 of 2
+==2278337==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278337==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278337==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278337==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278337==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278337==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278337==    by 0x401686: start_death_monitors (death_monitor_bonus.c:85)
+==2278337==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278337==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278337==    by 0x4012C1: main (main_bonus.c:31)
+==2278337== 
+==2278337== 272 bytes in 1 blocks are possibly lost in loss record 2 of 2
+==2278337==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278337==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278337==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278337==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278337==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278337==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278337==    by 0x4016C7: start_death_monitors (death_monitor_bonus.c:90)
+==2278337==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278337==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278337==    by 0x4012C1: main (main_bonus.c:31)
+==2278337== 
+==2278337== LEAK SUMMARY:
+==2278337==    definitely lost: 0 bytes in 0 blocks
+==2278337==    indirectly lost: 0 bytes in 0 blocks
+==2278337==      possibly lost: 544 bytes in 2 blocks
+==2278337==    still reachable: 0 bytes in 0 blocks
+==2278337==         suppressed: 0 bytes in 0 blocks
+==2278337== 
+==2278337== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==2278339== 272 bytes in 1 blocks are possibly lost in loss record 1 of 2
+==2278339==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278339==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278339==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278339==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278339==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278339==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278339==    by 0x401686: start_death_monitors (death_monitor_bonus.c:85)
+==2278339==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278339==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278339==    by 0x4012C1: main (main_bonus.c:31)
+==2278339== 
+==2278339== 272 bytes in 1 blocks are possibly lost in loss record 2 of 2
+==2278339==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278339==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278339==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278339==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278339==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278339==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278339==    by 0x4016C7: start_death_monitors (death_monitor_bonus.c:90)
+==2278339==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278339==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278339==    by 0x4012C1: main (main_bonus.c:31)
+==2278339== 
+==2278339== LEAK SUMMARY:
+==2278339==    definitely lost: 0 bytes in 0 blocks
+==2278339==    indirectly lost: 0 bytes in 0 blocks
+==2278339==      possibly lost: 544 bytes in 2 blocks
+==2278339==    still reachable: 0 bytes in 0 blocks
+==2278339==         suppressed: 0 bytes in 0 blocks
+==2278339== 
+==2278339== ERROR SUMMARY: 2 errors from 2 contexts (suppressed: 0 from 0)
+==2278340== Thread 1:
+==2278340== 272 bytes in 1 blocks are possibly lost in loss record 1 of 3
+==2278340==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278340==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278340==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278340==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278340==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278340==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278340==    by 0x401686: start_death_monitors (death_monitor_bonus.c:85)
+==2278340==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278340==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278340==    by 0x4012C1: main (main_bonus.c:31)
+==2278340== 
+==2278340== 272 bytes in 1 blocks are possibly lost in loss record 2 of 3
+==2278340==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278340==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278340==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278340==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278340==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278340==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278340==    by 0x4016C7: start_death_monitors (death_monitor_bonus.c:90)
+==2278340==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278340==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278340==    by 0x4012C1: main (main_bonus.c:31)
+==2278340== 
+==2278340== 1,024 bytes in 1 blocks are still reachable in loss record 3 of 3
+==2278340==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278340==    by 0x48F2BA3: _IO_file_doallocate (filedoalloc.c:101)
+==2278340==    by 0x4901CDF: _IO_doallocbuf (genops.c:347)
+==2278340==    by 0x4900F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==2278340==    by 0x48FF6D4: _IO_new_file_xsputn (fileops.c:1243)
+==2278340==    by 0x48FF6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==2278340==    by 0x48F47A2: _IO_padn (iopadn.c:64)
+==2278340==    by 0x48EA69C: pad_func (vfprintf-internal.c:196)
+==2278340==    by 0x48EA69C: __vfprintf_internal (vfprintf-internal.c:1516)
+==2278340==    by 0x48D479E: printf (printf.c:33)
+==2278340==    by 0x402D6E: safe_log_printf (safe_printf_bonus.c:29)
+==2278340==    by 0x4014D9: philosopher_eat (philo_eat_bonus.c:19)
+==2278340==    by 0x401344: behaviour_loop (philo_behaviour_bonus.c:41)
+==2278340==    by 0x40131D: philosopher_behaviour (philo_behaviour_bonus.c:65)
+==2278340== 
+==2278340== LEAK SUMMARY:
+==2278340==    definitely lost: 0 bytes in 0 blocks
+==2278340==    indirectly lost: 0 bytes in 0 blocks
+==2278340==      possibly lost: 544 bytes in 2 blocks
+==2278340==    still reachable: 1,024 bytes in 1 blocks
+==2278340==         suppressed: 0 bytes in 0 blocks
+==2278340== 
+==2278340== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==2278340== 
+==2278340== 1 errors in context 1 of 3:
+==2278340== Thread 2:
+==2278340== Invalid read of size 4
+==2278340==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278340==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278340==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278340==    by 0x401491: check_death_conditions (philo_death_bonus.c:50)
+==2278340==    by 0x4013FA: check_philo_death (philo_death_bonus.c:65)
+==2278340==    by 0x401761: death_monitor (death_monitor_bonus.c:43)
+==2278340==    by 0x4908AC2: start_thread (pthread_create.c:442)
+==2278340==    by 0x4999A03: clone (clone.S:100)
+==2278340==  Address 0x485e008 is not stack'd, malloc'd or (recently) free'd
+==2278340== 
+==2278340== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==2278338== Invalid read of size 4
+==2278338==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278338==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278338==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278338==    by 0x4015B8: philosopher_sleep_think (philo_sleep_think_bonus.c:22)
+==2278338==    by 0x4013A1: behaviour_loop (philo_behaviour_bonus.c:48)
+==2278338==    by 0x40131D: philosopher_behaviour (philo_behaviour_bonus.c:65)
+==2278338==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278338==    by 0x4012C1: main (main_bonus.c:31)
+==2278338==  Address 0x485e008 is not stack'd, malloc'd or (recently) free'd
+==2278338== 
+==2278338== 
+==2278338== Process terminating with default action of signal 11 (SIGSEGV)
+==2278338==  Access not within mapped region at address 0x485E008
+==2278338==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278338==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278338==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278338==    by 0x4015B8: philosopher_sleep_think (philo_sleep_think_bonus.c:22)
+==2278338==    by 0x4013A1: behaviour_loop (philo_behaviour_bonus.c:48)
+==2278338==    by 0x40131D: philosopher_behaviour (philo_behaviour_bonus.c:65)
+==2278338==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278338==    by 0x4012C1: main (main_bonus.c:31)
+==2278338==  If you believe this happened as a result of a stack
+==2278338==  overflow in your program's main thread (unlikely but
+==2278338==  possible), you can try to increase the size of the
+==2278338==  main thread stack using the --main-stacksize= flag.
+==2278338==  The main thread stack size used in this run was 8388608.
+==2278338== 
+==2278338== HEAP SUMMARY:
+==2278338==     in use at exit: 1,568 bytes in 3 blocks
+==2278338==   total heap usage: 19 allocs, 16 frees, 2,104 bytes allocated
+==2278338== 
+==2278338== 272 bytes in 1 blocks are possibly lost in loss record 1 of 3
+==2278338==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278338==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278338==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278338==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278338==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278338==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278338==    by 0x401686: start_death_monitors (death_monitor_bonus.c:85)
+==2278338==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278338==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278338==    by 0x4012C1: main (main_bonus.c:31)
+==2278338== 
+==2278338== 272 bytes in 1 blocks are possibly lost in loss record 2 of 3
+==2278338==    at 0x484DA83: calloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278338==    by 0x40147D9: calloc (rtld-malloc.h:44)
+==2278338==    by 0x40147D9: allocate_dtv (dl-tls.c:375)
+==2278338==    by 0x40147D9: _dl_allocate_tls (dl-tls.c:634)
+==2278338==    by 0x49097B4: allocate_stack (allocatestack.c:430)
+==2278338==    by 0x49097B4: pthread_create@@GLIBC_2.34 (pthread_create.c:647)
+==2278338==    by 0x4016C7: start_death_monitors (death_monitor_bonus.c:90)
+==2278338==    by 0x401314: philosopher_behaviour (philo_behaviour_bonus.c:64)
+==2278338==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278338==    by 0x4012C1: main (main_bonus.c:31)
+==2278338== 
+==2278338== 1,024 bytes in 1 blocks are still reachable in loss record 3 of 3
+==2278338==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+==2278338==    by 0x48F2BA3: _IO_file_doallocate (filedoalloc.c:101)
+==2278338==    by 0x4901CDF: _IO_doallocbuf (genops.c:347)
+==2278338==    by 0x4900F5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+==2278338==    by 0x48FF6D4: _IO_new_file_xsputn (fileops.c:1243)
+==2278338==    by 0x48FF6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+==2278338==    by 0x48F47A2: _IO_padn (iopadn.c:64)
+==2278338==    by 0x48EA69C: pad_func (vfprintf-internal.c:196)
+==2278338==    by 0x48EA69C: __vfprintf_internal (vfprintf-internal.c:1516)
+==2278338==    by 0x48D479E: printf (printf.c:33)
+==2278338==    by 0x402D6E: safe_log_printf (safe_printf_bonus.c:29)
+==2278338==    by 0x4014D9: philosopher_eat (philo_eat_bonus.c:19)
+==2278338==    by 0x401344: behaviour_loop (philo_behaviour_bonus.c:41)
+==2278338==    by 0x40131D: philosopher_behaviour (philo_behaviour_bonus.c:65)
+==2278338== 
+==2278338== LEAK SUMMARY:
+==2278338==    definitely lost: 0 bytes in 0 blocks
+==2278338==    indirectly lost: 0 bytes in 0 blocks
+==2278338==      possibly lost: 544 bytes in 2 blocks
+==2278338==    still reachable: 1,024 bytes in 1 blocks
+==2278338==         suppressed: 0 bytes in 0 blocks
+==2278338== 
+==2278338== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)
+==2278338== 
+==2278338== 1 errors in context 1 of 3:
+==2278338== Invalid read of size 4
+==2278338==    at 0x4910474: sem_post@@GLIBC_2.34 (sem_post.c:35)
+==2278338==    by 0x402E3F: safe_sem_post (safe_sem_bonus.c:41)
+==2278338==    by 0x402D7B: safe_log_printf (safe_printf_bonus.c:30)
+==2278338==    by 0x4015B8: philosopher_sleep_think (philo_sleep_think_bonus.c:22)
+==2278338==    by 0x4013A1: behaviour_loop (philo_behaviour_bonus.c:48)
+==2278338==    by 0x40131D: philosopher_behaviour (philo_behaviour_bonus.c:65)
+==2278338==    by 0x401654: start_philosophers_behaviour (philo_start_bonus.c:37)
+==2278338==    by 0x4012C1: main (main_bonus.c:31)
+==2278338==  Address 0x485e008 is not stack'd, malloc'd or (recently) free'd
+==2278338== 
+==2278338== ERROR SUMMARY: 3 errors from 3 contexts (suppressed: 0 from 0)

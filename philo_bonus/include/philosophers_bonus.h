@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 20:51:31 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/02 14:14:48 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_philosopher
 	unsigned int			n_eat;
 	unsigned int			last_meal_timestamp;
 	struct s_philosopher	*next;
+	struct s_philosopher	*previous;
 	sem_t					*last_meal_sem;
 	pid_t					pid;
 	t_status				status;
@@ -243,7 +244,8 @@ int							safe_log_printf(char *string, unsigned int id,
 int							get_last_meal(t_philo *philo,
 								unsigned int *last_meal);
 
-int							set_last_meal(t_philo *philo, unsigned int last_meal);
+int							set_last_meal(t_philo *philo,
+								unsigned int last_meal);
 
 /**
  * @brief Waits on the stop semaphore for each philosopher.
@@ -430,16 +432,9 @@ char						*ft_uitoa(unsigned int n);
  */
 void						add_philo(t_philo **philo_lst, t_philo *new);
 
-/**
- * @brief Cleans up resources associated with a philosopher.
- *
- * This function closes the semaphores used by the philosopher and frees
- * the dynamically allocated memory for the philosopher's arguments and
- * the philosopher structure itself.
- *
- * @param philo Pointer to the philosopher structure to be cleaned up.
- */
-void						clean_philo(t_philo *philo);
+void						close_sems(t_args *args, int id);
+
+void						clean_philos(t_philo *philo);
 
 /**
  * @brief Creates and initializes a new philosopher structure.

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_death_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 20:50:32 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/30 12:27:27 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 	/**/
 	if (dead)
 	{
-		safe_log_printf("%10u" BOLD MAGENTA
+		safe_log_printf("%10u " BOLD MAGENTA
 			"%u" RESET RED " has died" RESET "\n", philo->id, philo->args);
 		// set_simulation_running(philo->args, 0);
 	}

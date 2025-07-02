@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_behaviour_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 21:22:16 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 20:16:25 by pablo            ###   ########.fr       */
+/*   Updated: 2025/06/30 12:58:40 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,8 +61,6 @@ static void	behaviour_loop(t_philo *philo)
  */
 void	philosopher_behaviour(t_philo *philo)
 {
-	if (philo->id % 2 != 0)
-		usleep((philo->args->time_die / 20) * 1000);
 	start_death_monitors(philo);
 	behaviour_loop(philo);
 }

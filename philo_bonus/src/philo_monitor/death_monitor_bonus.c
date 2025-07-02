@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   death_monitor_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 15:35:57 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/02 13:08:12 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,8 @@ static void	*death_stop_monitor(void *args)
 
 	philo = (t_philo *)args;
 	sem_wait(philo->args->death_sem);
-	clean_philo(philo);
+	// Only clean local resources in child process
+	clean_philos(philo);
 	exit(0);
 	return (NULL);
 }
