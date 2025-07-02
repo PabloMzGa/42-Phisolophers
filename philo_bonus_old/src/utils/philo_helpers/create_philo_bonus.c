@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:01:57 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 13:21:40 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,8 @@ t_philo	*create_philo(unsigned int id, t_args *args)
 	philo->id = id;
 	philo->n_eat = 0;
 	philo->last_meal_timestamp = get_time_ms();
+	philo->next = NULL;
 	philo->last_meal_sem = NULL;
-	philo->main_thread_ended = 0;
-	philo->main_thread_ended_sem = NULL;
-	philo->local_stop = 0;
-	philo->local_stop_sem = NULL;
 	philo->args = args;
 	philo->status = HUNGRY;
 	return (philo);

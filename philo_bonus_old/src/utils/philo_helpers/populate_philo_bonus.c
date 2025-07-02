@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:33:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 14:12:14 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:53:59 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,14 @@ static t_philo	*open_semaphore(t_philo *philo)
 		exit(1);
 		return (NULL);
 	}
+	philo->args->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1);
+	if (philo->args->local_stop_sem == NULL)
+	{
+		clean_philos(philo);
+		exit(1);
+		return (NULL);
+	}
+	printf("Creado filósofo con id %i en pid %i\n", philo->id, getpid());
 	return (philo);
 }
 
@@ -42,7 +50,7 @@ t_philo	*populate_philosophers(t_args *args)
 	t_philo			*tmp_philo;
 
 	counter = 1;
-	while (counter < args->philo_n)
+	while (counter <= args->philo_n)
 	{
 		tmp_philo = create_philo(counter, args);
 		if (!tmp_philo)
@@ -57,7 +65,6 @@ t_philo	*populate_philosophers(t_args *args)
 	}
 	return (NULL);
 }
-
 
 /*
 t_philo	*populate_philosophers(t_args *args)

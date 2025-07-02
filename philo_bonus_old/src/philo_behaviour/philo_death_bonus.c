@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/30 12:27:27 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:06:53 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 	{
 		safe_log_printf("%10u " BOLD MAGENTA
 			"%u" RESET RED " has died" RESET "\n", philo->id, philo->args);
-		// set_simulation_running(philo->args, 0);
+		set_local_stop(philo->args, 1);
 	}
 	return (dead);
 }

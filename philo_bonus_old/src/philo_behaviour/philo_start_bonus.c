@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 18:16:43 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:14:04 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,67 +29,10 @@
  * necesarios para activar los monitores locales de cada hijo.
  */
 
-int	start_and_join_behaviours(t_philo *philo)
+
+void	start_philosophers_behaviour(t_philo *philo)
 {
-	pthread_t	behaviour_thread;
+	//pthread_t	monitor_thread;
 
-	if (pthread_create(&behaviour_thread, NULL, philo_behaviour_loop,
-			philo) != 0)
-	{
-		printf(RED "Error: Failed to create behaviour thread\n" RESET);
-		return (1);
-	}
-	pthread_join(behaviour_thread, NULL);
-}
-
-static t_philo	*open_semaphore(t_philo *philo)
-{
-	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", philo->id, 1);
-	if (philo->last_meal_sem == NULL)
-	{
-		// clean_philos(philo);
-		exit(1);
-		return (NULL);
-	}
-	philo->main_thread_ended_sem = get_sem_numbered("/main_thread_ended_sem",
-			philo->id, 1);
-	if (philo->last_meal_sem == NULL)
-	{
-		// clean_philos(philo);
-		exit(1);
-		return (NULL);
-	}
-	philo->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1);
-	if (philo->last_meal_sem == NULL)
-	{
-		// clean_philos(philo);
-		exit(1);
-		return (NULL);
-	}
-	printf("Creado filósofo con id %i en pid %i\n", philo->id, getpid());
-	return (philo);
-}
-
-void	philo_start(t_args *args)
-{
-	unsigned int	counter;
-	t_philo			*tmp_philo;
-
-	counter = 1;
-	while (counter <= args->philo_n)
-	{
-		tmp_philo = create_philo(counter, args);
-		if (!tmp_philo)
-			return ;
-		tmp_philo->pid = fork();
-		if (tmp_philo->pid == 0)
-		{
-			start_and_join_behaviours(open_semaphore(tmp_philo));
-			return;
-		}
-		free(tmp_philo);
-		if (tmp_philo->pid == -1)
-			return ;
-		++counter;
-	}
+	philosopher_behaviour(philo);
 }

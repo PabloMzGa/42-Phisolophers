@@ -47,13 +47,13 @@
           "description": "Enable pretty-printing for gdb",
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
-        },
-		/*
+       },
+
         {
           "description": "Follow forked processes",
           "text": "set follow-fork-mode child", // Sigue al proceso hijo tras fork
           "ignoreFailures": true
-        } */
+        }
       ],
       "preLaunchTask": "build all philo_bonus C files"
     }

@@ -1,35 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   safe_printf_bonus.c                                :+:      :+:    :+:   */
+/*   get_last_meal_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/24 11:50:34 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 17:57:49 by pabmart2         ###   ########.fr       */
+/*   Created: 2025/06/26 20:42:10 by pablo             #+#    #+#             */
+/*   Updated: 2025/07/02 18:10:37 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-int	safe_single_printf(char *string, t_args *args)
+int	get_last_meal(t_philo *philo, unsigned int *last_meal)
 {
-	if (safe_sem_wait(args->printf_sem))
-		return (1);
-	printf("%s", string);
-	if (safe_sem_post(args->printf_sem))
-		return (1);
-	return (0);
-}
-
-int	safe_log_printf(char *string, unsigned int id, t_args *args)
-{
-	unsigned int	stop;
-
-	if (safe_sem_wait(args->printf_sem))
-		return (1);
-	printf(string, get_time_ms() - args->epoch, id);
-	if (safe_sem_post(args->printf_sem))
-		return (1);
+	safe_sem_wait(philo->last_meal_sem);
+	*last_meal = philo->last_meal_timestamp;
+	safe_sem_post(philo->last_meal_sem);
 	return (0);
 }

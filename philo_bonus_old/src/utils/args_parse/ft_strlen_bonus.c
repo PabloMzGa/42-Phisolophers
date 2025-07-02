@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_strlen_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:13:20 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/10 17:33:10 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/26 14:08:18 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-int	main(int argc, char *argv[])
+size_t	ft_strlen(const char *str)
 {
-	t_args	args;
+	size_t	i;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	printf("Iniciando en pid %i\n", getpid());
-	philo_start(&args);
-	while (waitpid(-1, NULL, 0) > 0)
-		;
-	return (0);
+	i = 0;
+	if (str == NULL)
+		return (0);
+	while (str[i])
+		++i;
+	return (i);
 }

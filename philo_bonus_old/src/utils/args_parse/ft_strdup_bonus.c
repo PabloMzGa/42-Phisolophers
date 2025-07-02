@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_strdup_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:13:20 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/11 20:34:43 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/26 14:07:32 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-int	main(int argc, char *argv[])
+char	*ft_strdup(const char *s)
 {
-	t_args	args;
+	size_t	len;
+	char	*cpy;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	printf("Iniciando en pid %i\n", getpid());
-	philo_start(&args);
-	while (waitpid(-1, NULL, 0) > 0)
-		;
-	return (0);
+	len = ft_strlen(s) + 1;
+	cpy = ft_calloc(len, sizeof(char));
+	if (!cpy)
+		return (NULL);
+	return (ft_memcpy(cpy, s, len));
 }

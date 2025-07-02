@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 14:14:51 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:06:53 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ static void	*full_stop_monitor(void *args)
 		sem_wait(philo->args->full_sem);
 		++i;
 	}
-	safe_sem_wait(philo->args->stop_sem);
+	set_local_stop(philo->args, 1);
+	//safe_sem_wait(philo->args->stop_sem);
 	kill_philosophers(philo);
 	return (NULL);
 }

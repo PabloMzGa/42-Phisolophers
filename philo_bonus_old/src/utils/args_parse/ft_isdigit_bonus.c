@@ -1,33 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   ft_isdigit_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:01:57 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/10 16:53:29 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/25 14:21:49 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+int	ft_isdigit(int c)
 {
-	t_philo	*philo;
-
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = NULL;
-	philo->main_thread_ended = 0;
-	philo->main_thread_ended_sem = NULL;
-	philo->local_stop = 0;
-	philo->local_stop_sem = NULL;
-	philo->args = args;
-	philo->status = HUNGRY;
-	return (philo);
+	return (c >= '0' && c <= '9');
 }

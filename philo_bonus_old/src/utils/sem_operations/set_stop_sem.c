@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_stop_sem.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 14:47:22 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 14:57:14 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/02 16:53:16 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@
  *
  * @param args Pointer to the arguments structure containing the number of
  * philosophers and the stop semaphore.
- */
-void	set_stop_sem(t_args *args)
-{
+
+ void	set_stop_sem(t_args *args)
+ {
 	unsigned int	i;
 
 	i = 0;
@@ -35,3 +35,4 @@ void	set_stop_sem(t_args *args)
 		++i;
 	}
 }
+*/

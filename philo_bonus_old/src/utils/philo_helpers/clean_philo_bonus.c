@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:45:01 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 14:11:56 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:32:35 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,21 +18,26 @@ void	close_sems(t_args *args, int id)
 	int	status;
 
 	status = 0;
-	if (args->forks_sem != SEM_FAILED)
-		if (sem_close(args->forks_sem) == -1)
-			status = -1;
-	if (args->full_sem != SEM_FAILED)
-		if (sem_close(args->full_sem) == -1)
-			status = -1;
-	if (args->stop_sem != SEM_FAILED)
-		if (sem_close(args->stop_sem) == -1)
-			status = -1;
-	if (args->death_sem != SEM_FAILED)
-		if (sem_close(args->death_sem) == -1)
-			status = -1;
-	if (args->printf_sem != SEM_FAILED)
-		if (sem_close(args->printf_sem) == -1)
-			status = -1;
+	   if (args->forks_sem != SEM_FAILED) {
+			   if (sem_close(args->forks_sem) == -1)
+					   status = -1;
+			   args->forks_sem = NULL;
+	   }
+	   if (args->full_sem != SEM_FAILED) {
+			   if (sem_close(args->full_sem) == -1)
+					   status = -1;
+			   args->full_sem = NULL;
+	   }
+	   if (args->death_sem != SEM_FAILED) {
+			   if (sem_close(args->death_sem) == -1)
+					   status = -1;
+			   args->death_sem = NULL;
+	   }
+	   if (args->printf_sem != SEM_FAILED) {
+			   if (sem_close(args->printf_sem) == -1)
+					   status = -1;
+			   args->printf_sem = NULL;
+	   }
 	if (status == -1)
 		printf(RED "Error closing args sempahores in process with philosopher's"
 					" ID" MAGENTA "%i " RESET "\n",
@@ -41,10 +46,15 @@ void	close_sems(t_args *args, int id)
 
 void	clean_philos(t_philo *philo)
 {
+	sem_t *sem;
+
+	sem = philo->last_meal_sem;
+	printf("Limpiando filósofo con id %i en pid %i\n", philo->id, getpid());
 	close_sems(philo->args, philo->id);
 	if (philo->last_meal_sem != SEM_FAILED && philo->last_meal_sem != NULL)
 	{
-		if (sem_close(philo->last_meal_sem) == -1)
+		philo->last_meal_sem = NULL;
+		if (sem_close(sem) == -1)
 		{
 			printf(RED "Error closing philosopher's semaphore with id "
 				MAGENTA "%i " RESET "\n",

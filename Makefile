@@ -6,7 +6,7 @@
 #    By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/06/30 12:57:22 by pabmart2         ###   ########.fr        #
+#    Updated: 2025/07/02 17:06:53 by pabmart2         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -137,6 +137,7 @@ BONUS_SRC = \
 	philo_bonus/src/utils/sem_operations/get_last_meal.c \
 	philo_bonus/src/utils/sem_operations/safe_printf_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_sem_bonus.c \
+	philo_bonus/src/utils/sem_operations/set_local_stop.c \
 	philo_bonus/src/utils/sem_operations/set_stop_sem.c \
 	philo_bonus/src/utils/sem_operations/set_last_meal.c \
 

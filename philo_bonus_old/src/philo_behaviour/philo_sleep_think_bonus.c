@@ -6,14 +6,14 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:55:37 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:11:28 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 16:32:40 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-void	philo_sleep_think(t_philo *philo)
+void	philosopher_sleep_think(t_philo *philo)
 {
 	struct timeval	time;
 	int delay;

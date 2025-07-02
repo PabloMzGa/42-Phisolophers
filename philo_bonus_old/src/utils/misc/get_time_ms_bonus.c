@@ -1,33 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   get_time_ms_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:01:57 by pabmart2         ###   ########.fr       */
+/*   Created: 2025/06/19 21:03:17 by pablo             #+#    #+#             */
+/*   Updated: 2025/06/25 18:42:41 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+unsigned int	get_time_ms(void)
 {
-	t_philo	*philo;
+	long			ms;
+	struct timeval	time;
 
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = NULL;
-	philo->main_thread_ended = 0;
-	philo->main_thread_ended_sem = NULL;
-	philo->local_stop = 0;
-	philo->local_stop_sem = NULL;
-	philo->args = args;
-	philo->status = HUNGRY;
-	return (philo);
+	gettimeofday(&time, NULL);
+	ms = (time.tv_sec * 1000) + (time.tv_usec / 1000);
+	return (ms);
 }

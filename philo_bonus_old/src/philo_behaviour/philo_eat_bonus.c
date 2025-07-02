@@ -6,14 +6,14 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:11:04 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 17:52:57 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/02 17:05:02 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-void	philo_eat(t_philo *philo)
+void	philosopher_eat(t_philo *philo)
 {
 	safe_sem_wait(philo->args->forks_sem);
 	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN " has taken a fork"

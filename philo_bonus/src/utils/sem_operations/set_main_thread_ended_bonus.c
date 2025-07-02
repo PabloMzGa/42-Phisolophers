@@ -1,33 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   set_main_thread_ended_bonus.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:01:57 by pabmart2         ###   ########.fr       */
+/*   Created: 2025/06/26 20:42:10 by pablo             #+#    #+#             */
+/*   Updated: 2025/07/02 18:12:08 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+int	set_main_thread_ended(t_philo *philo, unsigned int main_thread_ended)
 {
-	t_philo	*philo;
-
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = NULL;
-	philo->main_thread_ended = 0;
-	philo->main_thread_ended_sem = NULL;
-	philo->local_stop = 0;
-	philo->local_stop_sem = NULL;
-	philo->args = args;
-	philo->status = HUNGRY;
-	return (philo);
+	safe_sem_wait(philo->main_thread_ended_sem);
+	philo->last_meal_timestamp = main_thread_ended;
+	safe_sem_post(philo->main_thread_ended_sem);
+	return (main_thread_ended);
 }

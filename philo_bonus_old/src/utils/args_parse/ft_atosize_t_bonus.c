@@ -1,33 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   create_philo_bonus.c                               :+:      :+:    :+:   */
+/*   ft_atosize_t_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 13:48:28 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:01:57 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/11 14:23:00 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/25 14:21:51 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-t_philo	*create_philo(unsigned int id, t_args *args)
+size_t	ft_atosize_t(const char *nptr)
 {
-	t_philo	*philo;
+	size_t	output;
 
-	philo = malloc(sizeof(t_philo));
-	if (!philo)
-		return (NULL);
-	philo->id = id;
-	philo->n_eat = 0;
-	philo->last_meal_timestamp = get_time_ms();
-	philo->last_meal_sem = NULL;
-	philo->main_thread_ended = 0;
-	philo->main_thread_ended_sem = NULL;
-	philo->local_stop = 0;
-	philo->local_stop_sem = NULL;
-	philo->args = args;
-	philo->status = HUNGRY;
-	return (philo);
+	output = 0;
+	while (ft_isspace(*nptr))
+		++nptr;
+	if (*nptr == '-')
+		return (0);
+	else if (*nptr == '+')
+		++nptr;
+	while (ft_isdigit(*nptr))
+	{
+		output = output * 10 + *nptr - '0';
+		++nptr;
+	}
+	return (output);
 }

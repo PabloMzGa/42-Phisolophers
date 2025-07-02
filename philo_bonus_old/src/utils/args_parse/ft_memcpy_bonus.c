@@ -1,29 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_memcpy_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:13:20 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/10 20:49:48 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/26 13:01:26 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-int	main(int argc, char *argv[])
+void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
-	t_args	args;
+	char		*temp_dest;
+	const char	*temp_src;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	printf("Iniciando en pid %i\n", getpid());
-	philo_start(&args);
-	while (waitpid(-1, NULL, 0) > 0)
-		;
-	return (0);
+	if (!dest && !src)
+		return (NULL);
+	temp_dest = (char *)dest;
+	temp_src = (const char *)src;
+	while (n--)
+		*(temp_dest++) = *(temp_src++);
+	return (dest);
 }

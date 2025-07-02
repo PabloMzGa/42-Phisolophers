@@ -1,29 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_bonus.c                                       :+:      :+:    :+:   */
+/*   ft_calloc_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:13:20 by pabmart2         ###   ########.fr       */
+/*   Created: 2024/09/11 15:47:45 by pabmart2          #+#    #+#             */
+/*   Updated: 2025/06/26 14:03:47 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-int	main(int argc, char *argv[])
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	t_args	args;
+	size_t	total_size;
+	void	*ptr;
 
-	if (!check_args(argc, argv))
-		return (1);
-	if (set_args(&args, argc, argv))
-		return (1);
-	printf("Iniciando en pid %i\n", getpid());
-	philo_start(&args);
-	while (waitpid(-1, NULL, 0) > 0)
-		;
-	return (0);
+	if (size != 0 && nmemb > __SIZE_MAX__ / size)
+		return (NULL);
+	total_size = nmemb * size;
+	ptr = malloc(total_size);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, total_size);
+	return (ptr);
 }
