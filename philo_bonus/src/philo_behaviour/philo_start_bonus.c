@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_start_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 18:16:43 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:39:51 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,51 @@
 
 int	start_and_join_behaviours(t_philo *philo)
 {
-	pthread_t	behaviour_thread;
+	pthread_t	behaviour_thread_id;
+	pthread_t	death_monitor_id;
+	pthread_t	death_stop_monitor_id;
+	pthread_t	full_monitor_id;
+	pthread_t	full_stop_monitor_id;
 
-	if (pthread_create(&behaviour_thread, NULL, philo_behaviour_loop,
+	// TODO: Si aquí falla, hay que cerrar todos los hilos, por lo que
+	// tendré que hacer un semáforo para indicar cierre global
+	if (!philo)
+		return (1);
+	if (pthread_create(&behaviour_thread_id, NULL, philo_behaviour_loop,
 			philo) != 0)
 	{
 		printf(RED "Error: Failed to create behaviour thread\n" RESET);
 		return (1);
 	}
-	pthread_join(behaviour_thread, NULL);
+	if (pthread_create(&death_monitor_id, NULL, death_monitor, philo) != 0)
+	{
+		printf(RED "Error: Failed to create death monitor thread\n" RESET);
+		return (1);
+	}
+	if (pthread_create(&death_stop_monitor_id, NULL, death_stop_monitor,
+			philo) != 0)
+	{
+		printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
+		return (1);
+	}
+	if (philo->args->n_eat > 0)
+	{
+		if (pthread_create(&full_monitor_id, NULL, full_monitor, philo) != 0)
+		{
+			printf(RED "Error: Failed to create death monitor thread\n" RESET);
+			return (1);
+		}
+		if (pthread_create(&full_stop_monitor_id, NULL, full_stop_monitor,
+				philo) != 0)
+		{
+			printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
+			return (1);
+		}
+	}
+	pthread_detach(death_stop_monitor_id);
+	pthread_detach(death_monitor_id);
+	pthread_join(behaviour_thread_id, NULL);
+	return (0);
 }
 
 static t_philo	*open_semaphore(t_philo *philo)
@@ -51,26 +87,29 @@ static t_philo	*open_semaphore(t_philo *philo)
 		exit(1);
 		return (NULL);
 	}
-	philo->main_thread_ended_sem = get_sem_numbered("/main_thread_ended_sem",
-			philo->id, 1);
-	if (philo->last_meal_sem == NULL)
+	philo->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1);
+	if (philo->local_stop_sem == NULL)
 	{
 		// clean_philos(philo);
 		exit(1);
 		return (NULL);
 	}
-	philo->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1);
-	if (philo->last_meal_sem == NULL)
+	if (philo->args->n_eat > 0)
 	{
-		// clean_philos(philo);
-		exit(1);
-		return (NULL);
+		philo->local_full_sem = get_sem_numbered("/local_full_sem", philo->id,
+				0);
+		if (philo->local_full_sem == NULL)
+		{
+			// clean_philos(philo);
+			exit(1);
+			return (NULL);
+		}
 	}
 	printf("Creado filósofo con id %i en pid %i\n", philo->id, getpid());
 	return (philo);
 }
 
-void	philo_start(t_args *args)
+t_philo	*philo_start(t_args *args)
 {
 	unsigned int	counter;
 	t_philo			*tmp_philo;
@@ -80,16 +119,24 @@ void	philo_start(t_args *args)
 	{
 		tmp_philo = create_philo(counter, args);
 		if (!tmp_philo)
-			return ;
+			// TODO: Si aquí falla, hay que cerrar todos los hilos, por lo que
+			// tendré que hacer un semáforo para indicar cierre global
+			return (NULL);
 		tmp_philo->pid = fork();
 		if (tmp_philo->pid == 0)
 		{
 			start_and_join_behaviours(open_semaphore(tmp_philo));
-			return;
+			return (tmp_philo);
+		}
+		if (tmp_philo->pid == -1)
+		{
+			// TODO: Si aquí falla, hay que cerrar todos los hilos, por lo que
+			// tendré que hacer un semáforo para indicar cierre global
+			free(tmp_philo);
+			return (NULL);
 		}
 		free(tmp_philo);
-		if (tmp_philo->pid == -1)
-			return ;
 		++counter;
 	}
+	return (NULL);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:11:32 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:32:05 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,20 +25,9 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
+# define MICROSLEEP_MS 10
+
 //////////////////////////////////// ENUMS /////////////////////////////////////
-/**
- * @enum e_philo_status
- * @brief Represents the status of a philosopher.
- *
- * This enumeration defines the possible states a philosopher can be in:
- * - HUNGRY: The philosopher is hungry and wants to eat.
- * - FULL: The philosopher has eaten and is not hungry.
- */
-typedef enum e_philo_status
-{
-	HUNGRY = 0,
-	FULL = 1
-}					t_status;
 
 typedef struct s_args_info
 {
@@ -50,6 +39,8 @@ typedef struct s_args_info
 	unsigned int	epoch;
 	sem_t			*forks_sem;
 	sem_t			*printf_sem;
+	sem_t			*death_sem;
+	sem_t			*full_sem;
 }					t_args;
 
 typedef struct s_philosopher
@@ -58,21 +49,28 @@ typedef struct s_philosopher
 	unsigned int	n_eat;
 	unsigned int	last_meal_timestamp;
 	sem_t			*last_meal_sem;
-	unsigned int	main_thread_ended;
-	sem_t			*main_thread_ended_sem;
 	unsigned int	local_stop;
 	sem_t			*local_stop_sem;
 	pid_t			pid;
-	t_status		status;
+	sem_t			*local_full_sem;
 	t_args			*args;
 }					t_philo;
 
 ////////////////////////////// PHILO - BEHAVIOUR ///////////////////////////////
-void				philo_start(t_args *args);
+
+t_philo				*philo_start(t_args *args);
 void				philo_eat(t_philo *philo);
+int					check_philo_death(t_philo *philo);
 
 void				*philo_behaviour_loop(void *args);
 void				philo_sleep_think(t_philo *philo);
+
+/////////////////////////////// PHILO - MONITOR ////////////////////////////////
+
+void				*death_monitor(void *args);
+void				*death_stop_monitor(void *args);
+void				*full_monitor(void *args);
+void				*full_stop_monitor(void *args);
 
 //////////////////////////////// UTILS - MISC /////////////////////////////////
 
@@ -131,6 +129,8 @@ unsigned int		get_time_ms(void);
  * @return int Returns 0 on success, or 1 on failure to initialize semaphores.
  */
 int					set_args(t_args *args, int argc, char *argv[]);
+
+void				usleep_check(unsigned int sleep, t_philo *philo);
 
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
 
@@ -304,9 +304,9 @@ char				*ft_uitoa(unsigned int n);
  */
 t_philo				*create_philo(unsigned int id, t_args *args);
 
-void				close_sems(t_args *args, int id);
-
 void				clean_philos(t_philo *philo);
+
+void				close_args_sems(t_args *args);
 
 //////////////////////////// UTILS - SEM OPERATIOS /////////////////////////////
 
@@ -316,8 +316,8 @@ int					safe_sem_post(sem_t *sem);
 
 int					safe_single_printf(char *string, t_args *args);
 
-int					safe_log_printf(char *string, unsigned int id,
-						t_args *args);
+int					safe_log_printf(char *string, unsigned int id, t_args *args,
+						t_philo *philo);
 /**
  * @brief Safely retrieves the last meal timestamp of a philosopher.
  *
@@ -336,13 +336,15 @@ int					get_last_meal(t_philo *philo, unsigned int *last_meal);
 
 int					set_last_meal(t_philo *philo, unsigned int last_meal);
 
-int					get_last_meal(t_philo *philo,
+int					get_local_stop(t_philo *philo, unsigned int *local_stop);
+
+int					set_local_stop(t_philo *philo, unsigned int local_stop);
+
+int					get_main_thread_ended(t_philo *philo,
 						unsigned int *main_thread_ended);
 
-int					set_last_meal(t_philo *philo,
+int					set_main_thread_ended(t_philo *philo,
 						unsigned int main_thread_ended);
-
-int					set_local_stop(t_args *args, unsigned int value);
 
 /**
  * @brief Waits on the stop semaphore for each philosopher.

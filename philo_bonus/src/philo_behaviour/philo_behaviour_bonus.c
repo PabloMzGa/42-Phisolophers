@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_behaviour_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/02 18:11:41 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/03 17:35:12 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,20 +31,19 @@
 
 void	*philo_behaviour_loop(void *args)
 {
-	t_philo *philo;
+	t_philo			*philo;
+	unsigned int	local_stop;
 
 	philo = (t_philo *)args;
-	while (1)
+	get_local_stop(philo, &local_stop);
+	while (!local_stop)
 	{
 		philo_eat(philo);
-		/*
-		if (philo->status != FULL && philo->args->n_eat != 0
-		&& philo->n_eat >= philo->args->n_eat)
-		{
-			philo->status = FULL;
-			safe_sem_post(philo->args->full_sem);
-		}
-		*/
-		philo_sleep_think(philo);
+		if (philo->n_eat > 0 && philo->n_eat >= philo->args->n_eat)
+			safe_sem_post(philo->local_full_sem);
+		get_local_stop(philo, &local_stop);
+		if (!local_stop)
+			philo_sleep_think(philo);
 	}
+	return (NULL);
 }

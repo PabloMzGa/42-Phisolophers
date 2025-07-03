@@ -1,32 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atosize_t_bonus.c                               :+:      :+:    :+:   */
+/*   get_local_stop_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 14:23:00 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/25 14:21:51 by pabmart2         ###   ########.fr       */
+/*   Created: 2025/06/26 20:42:10 by pablo             #+#    #+#             */
+/*   Updated: 2025/07/03 11:33:21 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-size_t	ft_atosize_t(const char *nptr)
+int	get_local_stop(t_philo *philo, unsigned int *local_stop)
 {
-	size_t	output;
-
-	output = 0;
-	while (ft_isspace(*nptr))
-		++nptr;
-	if (*nptr == '-')
-		return (0);
-	else if (*nptr == '+')
-		++nptr;
-	while (ft_isdigit(*nptr))
-	{
-		output = output * 10 + *nptr - '0';
-		++nptr;
-	}
-	return (output);
+	safe_sem_wait(philo->local_stop_sem);
+	*local_stop = philo->local_stop;
+	safe_sem_post(philo->local_stop_sem);
+	return (0);
 }

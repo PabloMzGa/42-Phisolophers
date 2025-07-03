@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_sleep_think_bonus.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:55:37 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/02 18:11:28 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/03 14:18:52 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	philo_sleep_think(t_philo *philo)
 	int delay;
 
 	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET BLUE " is sleeping" RESET
-		"\n", philo->id, philo->args);
-		usleep(philo->args->time_sleep * 1000);
+		"\n", philo->id, philo->args, philo);
+		usleep_check(philo->args->time_sleep * 1000, philo);
 	gettimeofday(&time, NULL);
 	delay = ((time.tv_usec + philo->id * 17 + philo->n_eat * 13) % 10) * 1000;
 	if (delay)
-		usleep(delay);
+		usleep_check(delay, philo);
 	safe_log_printf("%10u " BOLD MAGENTA "%u" RESET BRIGHT_CYAN " is thinking"
-		RESET "\n", philo->id, philo->args);
+		RESET "\n", philo->id, philo->args, philo);
 }

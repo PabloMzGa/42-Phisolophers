@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+         #
+#    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/07/02 17:06:53 by pabmart2         ###   ########.fr        #
+#    Updated: 2025/07/03 17:34:51 by pablo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -130,16 +130,15 @@ BONUS_SRC = \
 	philo_bonus/src/utils/misc/get_sem_numbered_bonus.c \
 	philo_bonus/src/utils/misc/get_time_ms_bonus.c \
 	philo_bonus/src/utils/misc/set_args_bonus.c \
-	philo_bonus/src/utils/philo_helpers/add_philo_bonus.c \
+	philo_bonus/src/utils/misc/usleep_check_bonus.c \
 	philo_bonus/src/utils/philo_helpers/clean_philo_bonus.c \
 	philo_bonus/src/utils/philo_helpers/create_philo_bonus.c \
-	philo_bonus/src/utils/philo_helpers/populate_philo_bonus.c \
-	philo_bonus/src/utils/sem_operations/get_last_meal.c \
+	philo_bonus/src/utils/sem_operations/get_last_meal_bonus.c \
+	philo_bonus/src/utils/sem_operations/get_local_stop_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_printf_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_sem_bonus.c \
-	philo_bonus/src/utils/sem_operations/set_local_stop.c \
-	philo_bonus/src/utils/sem_operations/set_stop_sem.c \
-	philo_bonus/src/utils/sem_operations/set_last_meal.c \
+	philo_bonus/src/utils/sem_operations/set_last_meal_bonus.c \
+	philo_bonus/src/utils/sem_operations/set_local_stop_bonus.c \
 
 BONUS_OBJ = $(addprefix $(BONUS_OBJ_DIR)/, $(BONUS_SRC:.c=.o))
 
