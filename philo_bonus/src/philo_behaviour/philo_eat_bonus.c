@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:11:04 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/03 17:32:59 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 16:08:49 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	philo_eat(t_philo *philo)
 	safe_sem_wait(philo->args->forks_sem);
 	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN " has taken a fork"
 		RESET "\n", philo->id, philo->args, philo);
+	if (philo->args->philo_n == 1)
+		return;
 	safe_sem_wait(philo->args->forks_sem);
 	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
 		" has taken a fork" RESET "\n", philo->id, philo->args, philo);

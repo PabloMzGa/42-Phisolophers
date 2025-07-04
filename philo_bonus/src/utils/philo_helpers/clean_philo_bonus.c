@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:45:01 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/04 14:14:01 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 16:57:23 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,50 +16,26 @@
 void	close_args_sems(t_args *args)
 {
 	if (args->forks_sem && args->forks_sem != SEM_FAILED)
-	{
 		sem_close(args->forks_sem);
-		args->forks_sem = NULL;
-	}
-	/*
 	if (args->stop_sem && args->stop_sem != SEM_FAILED)
-	{
 		sem_close(args->stop_sem);
-		args->stop_sem = NULL;
-	}
-	*/
 	if (args->printf_sem && args->printf_sem != SEM_FAILED)
-	{
 		sem_close(args->printf_sem);
-		args->printf_sem = NULL;
-	}
 	if (args->n_eat > 0)
 	{
 		if (args->full_sem && args->full_sem != SEM_FAILED)
-		{
 			sem_close(args->full_sem);
-			args->full_sem = NULL;
-		}
 	}
 }
 
 void	clean_philos(t_philo *philo)
 {
-	sem_t	*sem;
-
-	sem = philo->last_meal_sem;
 	printf("Limpiando filósofo con id %i en pid %i\n", philo->id, getpid());
 	close_args_sems(philo->args);
 	if (philo->last_meal_sem != SEM_FAILED && philo->last_meal_sem != NULL)
-	{
-		philo->last_meal_sem = NULL;
-		sem_close(sem);
-	}
-	sem = philo->local_stop_sem;
+		sem_close(philo->last_meal_sem);
 	if (philo->local_stop_sem != SEM_FAILED && philo->local_stop_sem != NULL)
-	{
-		philo->local_stop_sem = NULL;
-		sem_close(sem);
-	}
+		sem_close(philo->local_stop_sem);
 	free(philo);
 }
 

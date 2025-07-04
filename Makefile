@@ -6,7 +6,7 @@
 #    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/07/04 13:08:46 by pablo            ###   ########.fr        #
+#    Updated: 2025/07/04 16:24:21 by pablo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -128,7 +128,6 @@ BONUS_SRC = \
 	philo_bonus/src/utils/args_parse/ft_strlen_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_uitoa_bonus.c \
 	philo_bonus/src/utils/misc/arg_check_bonus.c \
-	philo_bonus/src/utils/misc/get_sem_numbered_bonus.c \
 	philo_bonus/src/utils/misc/get_time_ms_bonus.c \
 	philo_bonus/src/utils/misc/set_args_bonus.c \
 	philo_bonus/src/utils/misc/usleep_check_bonus.c \
@@ -136,6 +135,7 @@ BONUS_SRC = \
 	philo_bonus/src/utils/philo_helpers/create_philo_bonus.c \
 	philo_bonus/src/utils/sem_operations/get_last_meal_bonus.c \
 	philo_bonus/src/utils/sem_operations/get_local_stop_bonus.c \
+	philo_bonus/src/utils/sem_operations/get_sem_numbered_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_printf_bonus.c \
 	philo_bonus/src/utils/sem_operations/safe_sem_bonus.c \
 	philo_bonus/src/utils/sem_operations/set_last_meal_bonus.c \

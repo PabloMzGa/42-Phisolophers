@@ -6,25 +6,14 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:31:19 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 14:14:58 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 17:02:05 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-/**
- * TODO: Parece que hay un error con stop_sem. Por alguna razón dice
- * que el semáforo es inválido. Puede que sea porque al hacer close
- * como la referencia es la misma en args, un sólo close sea ya suficiente
- *
- * Entonces, o bien se libera solo en el padre (no creo), o cada hijo
- * debe hacer su propio sem_open para tener una referencia individual
- * al semáforo.
- *
- * Sin embargo, al comentar la limpieza, sigue dando error. Asi que puede que
- * sea por algo relacionado con su creación.
- */
+
 int	set_sems(t_args *args)
 {
 	args->forks_sem = sem_open("/forks_sem", O_CREAT, 0644, args->philo_n);
