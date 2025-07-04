@@ -6,15 +6,15 @@
 #    By: pablo <pablo@student.42.fr>                +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/20 14:34:30 by pabmart2          #+#    #+#              #
-#    Updated: 2025/07/03 17:34:51 by pablo            ###   ########.fr        #
+#    Updated: 2025/07/04 13:08:46 by pablo            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 DEBUG_FLAGS = -g -fno-inline -gdwarf-4
-ASAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=address
-TSAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=thread
+ASAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=address -O1
+TSAN_FLAGS = $(DEBUG_FLAGS) -fsanitize=thread -O1
 
 BUILD_DIR = build
 
@@ -114,6 +114,7 @@ BONUS_SRC = \
 	philo_bonus/src/philo_behaviour/philo_start_bonus.c \
 	philo_bonus/src/philo_monitor/death_monitor_bonus.c \
 	philo_bonus/src/philo_monitor/full_monitor_bonus.c \
+	philo_bonus/src/philo_monitor/stop_monitor_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atol_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_atoui_bonus.c \
 	philo_bonus/src/utils/args_parse/ft_bzero_bonus.c \
@@ -146,8 +147,15 @@ BONUS_INCLUDES = -Iphilo_bonus/include
 
 bonus: $(BONUS_NAME)
 
+
 bonus-debug: CFLAGS += $(DEBUG_FLAGS)
 bonus-debug: bonus-clean $(BONUS_NAME)
+
+bonus-debug-asan: CFLAGS += $(ASAN_FLAGS)
+bonus-debug-asan: bonus-clean $(BONUS_NAME)
+
+bonus-debug-tsan: CFLAGS += $(TSAN_FLAGS)
+bonus-debug-tsan: bonus-clean $(BONUS_NAME)
 
 $(BONUS_NAME): $(BONUS_OBJ)
 	@mkdir -p $(BONUS_BUILD_DIR)
@@ -173,4 +181,4 @@ bonus-re: bonus-fclean
 
 
 ################################################
-.PHONY: all debug debug-asan debug-tsan debug-helgrind clean fclean re bonus bonus-clean bonus-fclean bonus-re
+.PHONY: all debug debug-asan debug-tsan debug-helgrind clean fclean re bonus bonus-clean bonus-fclean bonus-re bonus-debug bonus-debug-asan bonus-debug-tsan

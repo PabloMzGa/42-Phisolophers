@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/03 17:39:51 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 12:22:34 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,7 @@ int	start_and_join_behaviours(t_philo *philo)
 {
 	pthread_t	behaviour_thread_id;
 	pthread_t	death_monitor_id;
-	pthread_t	death_stop_monitor_id;
-	pthread_t	full_monitor_id;
-	pthread_t	full_stop_monitor_id;
+	pthread_t	stop_monitor_id;
 
 	// TODO: Si aquí falla, hay que cerrar todos los hilos, por lo que
 	// tendré que hacer un semáforo para indicar cierre global
@@ -52,27 +50,13 @@ int	start_and_join_behaviours(t_philo *philo)
 		printf(RED "Error: Failed to create death monitor thread\n" RESET);
 		return (1);
 	}
-	if (pthread_create(&death_stop_monitor_id, NULL, death_stop_monitor,
+	if (pthread_create(&stop_monitor_id, NULL, stop_monitor,
 			philo) != 0)
 	{
 		printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
 		return (1);
 	}
-	if (philo->args->n_eat > 0)
-	{
-		if (pthread_create(&full_monitor_id, NULL, full_monitor, philo) != 0)
-		{
-			printf(RED "Error: Failed to create death monitor thread\n" RESET);
-			return (1);
-		}
-		if (pthread_create(&full_stop_monitor_id, NULL, full_stop_monitor,
-				philo) != 0)
-		{
-			printf(RED "Error: Failed to create death stop monitor thread\n" RESET);
-			return (1);
-		}
-	}
-	pthread_detach(death_stop_monitor_id);
+	pthread_detach(stop_monitor_id);
 	pthread_detach(death_monitor_id);
 	pthread_join(behaviour_thread_id, NULL);
 	return (0);
@@ -80,30 +64,19 @@ int	start_and_join_behaviours(t_philo *philo)
 
 static t_philo	*open_semaphore(t_philo *philo)
 {
-	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", philo->id, 1);
+	philo->last_meal_sem = get_sem_numbered("/last_meal_sem", philo->id, 1, 1);
 	if (philo->last_meal_sem == NULL)
 	{
 		// clean_philos(philo);
 		exit(1);
 		return (NULL);
 	}
-	philo->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1);
+	philo->local_stop_sem = get_sem_numbered("/local_stop_sem", philo->id, 1, 0);
 	if (philo->local_stop_sem == NULL)
 	{
 		// clean_philos(philo);
 		exit(1);
 		return (NULL);
-	}
-	if (philo->args->n_eat > 0)
-	{
-		philo->local_full_sem = get_sem_numbered("/local_full_sem", philo->id,
-				0);
-		if (philo->local_full_sem == NULL)
-		{
-			// clean_philos(philo);
-			exit(1);
-			return (NULL);
-		}
 	}
 	printf("Creado filósofo con id %i en pid %i\n", philo->id, getpid());
 	return (philo);

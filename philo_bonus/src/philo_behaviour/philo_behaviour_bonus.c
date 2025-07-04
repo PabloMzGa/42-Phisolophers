@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/03 17:35:12 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 12:07:22 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	*philo_behaviour_loop(void *args)
 	while (!local_stop)
 	{
 		philo_eat(philo);
-		if (philo->n_eat > 0 && philo->n_eat >= philo->args->n_eat)
-			safe_sem_post(philo->local_full_sem);
+		if (philo->args->n_eat > 0 && philo->n_eat >= philo->args->n_eat)
+			sem_post(philo->args->full_sem);
 		get_local_stop(philo, &local_stop);
 		if (!local_stop)
 			philo_sleep_think(philo);

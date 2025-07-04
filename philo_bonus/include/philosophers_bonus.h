@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/03 17:32:05 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 12:45:59 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ typedef struct s_args_info
 	unsigned int	epoch;
 	sem_t			*forks_sem;
 	sem_t			*printf_sem;
-	sem_t			*death_sem;
+	sem_t			*stop_sem;
 	sem_t			*full_sem;
 }					t_args;
 
@@ -52,7 +52,6 @@ typedef struct s_philosopher
 	unsigned int	local_stop;
 	sem_t			*local_stop_sem;
 	pid_t			pid;
-	sem_t			*local_full_sem;
 	t_args			*args;
 }					t_philo;
 
@@ -68,9 +67,8 @@ void				philo_sleep_think(t_philo *philo);
 /////////////////////////////// PHILO - MONITOR ////////////////////////////////
 
 void				*death_monitor(void *args);
-void				*death_stop_monitor(void *args);
+void				*stop_monitor(void *args);
 void				*full_monitor(void *args);
-void				*full_stop_monitor(void *args);
 
 //////////////////////////////// UTILS - MISC /////////////////////////////////
 
@@ -103,7 +101,8 @@ int					check_args(int argc, char *argv[]);
  * @param value The initial value for the semaphore if it is created.
  * @return A pointer to the opened semaphore, or NULL on failure.
  */
-sem_t				*get_sem_numbered(char *name, unsigned int id, int value);
+sem_t				*get_sem_numbered(char *name, unsigned int id, int value,
+						int unlink);
 
 /**
  * @brief Gets the current time in milliseconds.

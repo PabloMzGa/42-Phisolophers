@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/03 17:59:03 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/04 12:48:48 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,40 +28,27 @@
  *
  * - Cada proceso tendrá un hilo esperando a "X_semN", que en el momento que se
  * abra, terminará con el proceso poniendo a 1 set_local_stop()
-*/
-
+ */
 
 void	*full_monitor(void *args)
 {
-	t_philo			*philo;
+	t_args			*targs;
 	unsigned int	i;
 
+	targs = (t_args *)args;
 	i = 0;
-	philo = (t_philo *)args;
-	sem_wait(philo->local_full_sem);
-	while (i < philo->args->philo_n)
+	while (i < targs->philo_n)
 	{
-		sem_post(philo->args->full_sem);
+		safe_sem_wait(targs->full_sem);
 		++i;
 	}
-	printf("DEBUG: Filósofo %i lleno\n", philo->id);
-	return (NULL);
-}
-
-void	*full_stop_monitor(void *args)
-{
-	t_philo			*philo;
-	unsigned int	i;
-
 	i = 0;
-	philo = (t_philo *)args;
-	while (i < philo->args->philo_n)
+	while (i < targs->philo_n)
 	{
-		sem_wait(philo->args->full_sem);
-		printf ("DEBUG: Esperado una vez en id %i\n", philo->id);
+		safe_sem_post(targs->stop_sem);
+		++i;
 	}
 	safe_single_printf(BOLD GREEN "All philosophers have eaten the target "
-			"number of times, ending simulation\n" RESET, philo->args);
-	set_local_stop(philo, 1);
+		"number of times, ending simulation" RESET "\n", args);
 	return (NULL);
 }

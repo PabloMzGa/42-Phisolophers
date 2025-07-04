@@ -1,28 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_calloc_bonus.c                                  :+:      :+:    :+:   */
+/*   stop_monitor_bonus.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/11 15:47:45 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/26 14:03:47 by pablo            ###   ########.fr       */
+/*   Created: 2025/07/04 11:52:58 by pablo             #+#    #+#             */
+/*   Updated: 2025/07/04 13:40:26 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers_bonus.h"
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*stop_monitor(void *args)
 {
-	size_t	total_size;
-	void	*ptr;
+	t_philo	*philo;
 
-	if (size != 0 && nmemb > __SIZE_MAX__ / size)
+	philo = (t_philo *)args;
+	if (!philo->args->stop_sem)
 		return (NULL);
-	total_size = nmemb * size;
-	ptr = malloc(total_size);
-	if (!ptr)
-		return (NULL);
-	ft_bzero(ptr, total_size);
-	return (ptr);
+	sem_wait(philo->args->stop_sem);
+	set_local_stop(philo, 1);
+	return (NULL);
 }
