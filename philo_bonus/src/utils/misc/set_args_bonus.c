@@ -6,15 +6,39 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:31:19 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 17:02:05 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/07 17:44:56 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
-
-int	set_sems(t_args *args)
+/**
+ * @brief Initializes and unlinks named POSIX semaphores used by the program.
+ *
+ * This function creates and opens several named semaphores required for
+ * synchronization:
+ *
+ *   - "/forks_sem": Controls access to forks (initialized to the number of
+ *     philosophers).
+ *
+ *   - "/printf_sem": Ensures exclusive access to printing (initialized to 1).
+ *
+ *   - "/stop_sem": Used to signal stopping condition (initialized to 0).
+ *
+ *   - "/full_sem": (Optional) Used if n_eat > 0, to track philosophers who
+ *     have eaten enough (initialized to 0).
+ *
+ * Each semaphore is unlinked immediately after creation to ensure it is
+ * removed from the system when all processes close it. If any semaphore fails
+ * to open, previously opened semaphores are closed, and the function returns 1
+ * to indicate failure.
+ *
+ * @param args Pointer to a t_args structure containing program arguments and
+ *             semaphore handles.
+ * @return 0 on success, 1 on failure.
+ */
+static int	set_sems(t_args *args)
 {
 	args->forks_sem = sem_open("/forks_sem", O_CREAT, 0644, args->philo_n);
 	if (args->forks_sem == SEM_FAILED)
@@ -41,12 +65,10 @@ int	set_sems(t_args *args)
 
 int	set_args(t_args *args, int argc, char *argv[])
 {
-	// Initialize semaphore pointers to NULL
 	args->forks_sem = NULL;
 	args->printf_sem = NULL;
 	args->stop_sem = NULL;
 	args->full_sem = NULL;
-
 	args->philo_n = ft_atoui(argv[1]);
 	args->time_die = ft_atoui(argv[2]);
 	args->time_eat = ft_atoui(argv[3]);

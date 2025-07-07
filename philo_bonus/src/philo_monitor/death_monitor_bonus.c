@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 11:53:44 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/07 17:28:09 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	*death_monitor(void *args)
 	{
 		get_local_stop(philo, &local_stop);
 		if(local_stop)
-			return (NULL);
+			return (safe_sem_post(philo->death_monitor_end_sem), NULL);
 		is_dead = check_philo_death(philo);
 	}
 	while (counter < philo->args->philo_n)
@@ -35,7 +35,7 @@ void	*death_monitor(void *args)
 		safe_sem_post(philo->args->stop_sem);
 		++counter;
 	}
-	return (NULL);
+	return (safe_sem_post(philo->death_monitor_end_sem), NULL);
 }
 
 

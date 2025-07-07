@@ -36,7 +36,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/philo_bonus.out",
-      "args": [ "1", "500", "200", "200"], // Ajusta los argumentos según lo que necesites
+      "args": [ "5", "200", "200", "200"], // Ajusta los argumentos según lo que necesites
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],
@@ -48,12 +48,13 @@
           "text": "-enable-pretty-printing",
           "ignoreFailures": true
        },
-
-        {
-          "description": "Follow forked processes",
-          "text": "set follow-fork-mode child", // Sigue al proceso hijo tras fork
-          "ignoreFailures": true
-        }
+	   {
+		   "description": "Follow forked processes",
+		   "text": "set follow-fork-mode child", // Sigue al proceso hijo tras fork
+		   "ignoreFailures": true
+		   }
+		   /*
+		   */
       ],
       "preLaunchTask": "build all philo_bonus C files"
     }

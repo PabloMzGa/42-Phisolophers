@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_check_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 00:14:10 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:11:57 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/07 17:40:17 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,17 @@
 #include "philosophers_bonus.h"
 
 /**
- * @brief Checks if a string contains only positive numeric characters.
+ * @brief Checks if the given string represents a valid positive integer number.
  *
- * This function validates that a string contains only valid positive numeric
- * characters. It allows for optional leading whitespace and an optional '+'
- * sign, but rejects negative numbers (those starting with '-').
+ * This function verifies that the input string is a valid representation of a
+ * positive integer (greater than or equal to 1 and less than or equal to
+ * UINT_MAX). It skips leading whitespace, allows an optional '+' sign, and
+ * ensures all remaining characters are digits. Negative numbers, zero, and
+ * non-numeric strings are considered invalid.
  *
- * @param str The string to validate.
- * @return int Returns 1 if the string is a valid positive number, 0 otherwise.
+ * @param str The input string to validate.
+ * @return 1 if the string is a valid positive integer within the allowed range,
+ *         0 otherwise.
  */
 static int	is_valid_number(const char *str)
 {
@@ -52,14 +55,16 @@ static int	is_valid_number(const char *str)
 }
 
 /**
- * @brief Validates that all command-line arguments contain only numeric values.
+ * @brief Validates that all command-line arguments are valid numbers.
  *
- * This function checks that each argument from argv[1] onwards contains only
- * valid numeric characters. It skips argv[0] (program name) and validates
- * each subsequent argument.
+ * This function iterates through the command-line arguments (excluding the
+ * program name) and checks if each argument is a valid number using the
+ * is_valid_number() function. If any argument is not a valid number, it prints
+ * an error message indicating the invalid argument and the valid range, then
+ * returns 0. If all arguments are valid, it returns 1.
  *
  * @param argc The number of command-line arguments.
- * @param argv The argument vector.
+ * @param argv The array of command-line argument strings.
  * @return int Returns 1 if all arguments are valid numbers, 0 otherwise.
  */
 static int	validate_argv_numbers(int argc, char *argv[])
@@ -72,8 +77,9 @@ static int	validate_argv_numbers(int argc, char *argv[])
 		if (!is_valid_number(argv[i]))
 		{
 			printf(RED "Error: Argument %d ('%s') is not a valid number!\n"
-				RESET BOLD YELLOW "All arguments must be between 1 and %u.\n\n"
-				RESET, i, argv[i], UINT_MAX);
+				RESET BOLD YELLOW
+				"All arguments must be between 1 and %u.\n"
+				RESET "\n", i, argv[i], UINT_MAX);
 			return (0);
 		}
 		i++;
@@ -85,14 +91,12 @@ int	check_args(int argc, char *argv[])
 {
 	if (argc < 5)
 		return (printf(RED "Not enough arguments!\n" RESET BOLD "Usage: " RESET
-			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-			" [n_times_each_philo_must_eat]\n\n" RESET),
-				0);
+				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+				"[n_times_each_philo_must_eat]\n" RESET"\n"), 0);
 	else if (argc > 6)
 		return (printf(RED "Too many arguments!\n" RESET BOLD "Usage: " RESET
-			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-			" [n_times_each_philo_must_eat]\n\n" RESET),
-				0);
+				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+				" [n_times_each_philo_must_eat]\n" RESET "\n"), 0);
 	if (!validate_argv_numbers(argc, argv))
 		return (0);
 	else

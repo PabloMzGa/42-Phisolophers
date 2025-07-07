@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 17:01:54 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/07 17:12:47 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void	*full_monitor(void *args)
 		safe_sem_post(targs->stop_sem);
 		++i;
 	}
-	safe_single_printf(BOLD GREEN "All philosophers have eaten the target "
-		"number of times, ending simulation" RESET "\n", args);
+
 	return (NULL);
 }

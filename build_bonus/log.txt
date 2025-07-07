@@ -1,66 +1,154 @@
-==18616== Memcheck, a memory error detector
-==18616== Copyright (C) 2002-2022, and GNU GPL'd, by Julian Seward et al.
-==18616== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
-==18616== Command: ./philo_bonus 2 600 200 200 1
-==18616== Parent PID: 299
-==18616== 
-==18619== 
-==18619== HEAP SUMMARY:
-==18619==     in use at exit: 0 bytes in 0 blocks
-==18619==   total heap usage: 21 allocs, 21 frees, 2,345 bytes allocated
-==18619== 
-==18619== All heap blocks were freed -- no leaks are possible
-==18619== 
-==18619== For lists of detected and suppressed errors, rerun with: -s
-==18619== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==18620== 
-==18620== HEAP SUMMARY:
-==18620==     in use at exit: 0 bytes in 0 blocks
-==18620==   total heap usage: 22 allocs, 22 frees, 2,401 bytes allocated
-==18620== 
-==18620== All heap blocks were freed -- no leaks are possible
-==18620== 
-==18620== For lists of detected and suppressed errors, rerun with: -s
-==18620== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
-==18616== 
-==18616== Process terminating with default action of signal 2 (SIGINT)
-==18616==    at 0x48E0F16: __futex_abstimed_wait_common64 (futex-internal.c:57)
-==18616==    by 0x48E0F16: __futex_abstimed_wait_common (futex-internal.c:87)
-==18616==    by 0x48E5CE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
-==18616==    by 0x109326: main (main_bonus.c:41)
-==18616== 
-==18616== HEAP SUMMARY:
-==18616==     in use at exit: 1,296 bytes in 2 blocks
-==18616==   total heap usage: 12 allocs, 10 frees, 1,675 bytes allocated
-==18616== 
-==18616== 272 bytes in 1 blocks are possibly lost in loss record 1 of 2
-==18616==    at 0x48465EF: calloc (vg_replace_malloc.c:1328)
-==18616==    by 0x4010C62: calloc (rtld-malloc.h:44)
-==18616==    by 0x4010C62: allocate_dtv (dl-tls.c:401)
-==18616==    by 0x40116CD: _dl_allocate_tls (dl-tls.c:670)
-==18616==    by 0x48E4DAE: allocate_stack (allocatestack.c:423)
-==18616==    by 0x48E4DAE: pthread_create@@GLIBC_2.34 (pthread_create.c:650)
-==18616==    by 0x10929F: main (main_bonus.c:28)
-==18616== 
-==18616== 1,024 bytes in 1 blocks are still reachable in loss record 2 of 2
-==18616==    at 0x48417B4: malloc (vg_replace_malloc.c:381)
-==18616==    by 0x48D08CB: _IO_file_doallocate (filedoalloc.c:101)
-==18616==    by 0x48DE09F: _IO_doallocbuf (genops.c:347)
-==18616==    by 0x48DE09F: _IO_doallocbuf (genops.c:342)
-==18616==    by 0x48DD477: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
-==18616==    by 0x48DC63D: _IO_new_file_xsputn (fileops.c:1243)
-==18616==    by 0x48DC63D: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
-==18616==    by 0x48B750D: outstring_func (vfprintf-internal.c:239)
-==18616==    by 0x48B750D: __vfprintf_internal (vfprintf-internal.c:767)
-==18616==    by 0x48AD65A: printf (printf.c:33)
-==18616==    by 0x1092D9: main (main_bonus.c:34)
-==18616== 
-==18616== LEAK SUMMARY:
-==18616==    definitely lost: 0 bytes in 0 blocks
-==18616==    indirectly lost: 0 bytes in 0 blocks
-==18616==      possibly lost: 272 bytes in 1 blocks
-==18616==    still reachable: 1,024 bytes in 1 blocks
-==18616==         suppressed: 0 bytes in 0 blocks
-==18616== 
-==18616== For lists of detected and suppressed errors, rerun with: -s
-==18616== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)
+==14672== drd, a thread error detector
+==14672== Copyright (C) 2006-2020, and GNU GPL'd, by Bart Van Assche.
+==14672== Using Valgrind-3.19.0 and LibVEX; rerun with -h for copyright info
+==14672== Command: ./philo_bonus 5 600 200 200 1
+==14672== Parent PID: 289
+==14672== 
+==14675== Thread 4:
+==14675== Invalid semaphore: semaphore 0x487e000
+==14675==    at 0x4864A3A: sem_wait_intercept (drd_pthread_intercepts.c:1545)
+==14675==    by 0x4864A3A: sem_wait@* (drd_pthread_intercepts.c:1553)
+==14675==    by 0x109B54: stop_monitor (stop_monitor_bonus.c:22)
+==14675==    by 0x484DD34: vgDrd_thread_wrapper (drd_pthread_intercepts.c:491)
+==14675==    by 0x490E1F4: start_thread (pthread_create.c:442)
+==14675==    by 0x498DAFF: clone (clone.S:100)
+==14675== semaphore 0x487e000 was first observed at:
+==14675==    at 0x486383B: sem_open_intercept (drd_pthread_intercepts.c:1502)
+==14675==    by 0x486383B: sem_open@* (drd_pthread_intercepts.c:1513)
+==14672== Thread 2:
+==14675==    by 0x10A4EA: set_sems (set_args_bonus.c:27)
+==14672== Invalid semaphore: semaphore 0x487f000
+==14675==    by 0x10A6B7: set_args (set_args_bonus.c:59)
+==14675==    by 0x10926B: main (main_bonus.c:31)
+==14675== 
+==14672==    at 0x4864A3A: sem_wait_intercept (drd_pthread_intercepts.c:1545)
+==14672==    by 0x4864A3A: sem_wait@* (drd_pthread_intercepts.c:1553)
+==14672==    by 0x10ABC8: safe_sem_wait (safe_sem_bonus.c:25)
+==14672==    by 0x109AD6: full_monitor (full_monitor_bonus.c:25)
+==14672==    by 0x484DD34: vgDrd_thread_wrapper (drd_pthread_intercepts.c:491)
+==14672==    by 0x490E1F4: start_thread (pthread_create.c:442)
+==14672==    by 0x498DAFF: clone (clone.S:100)
+==14672== semaphore 0x487f000 was first observed at:
+==14672==    at 0x486383B: sem_open_intercept (drd_pthread_intercepts.c:1502)
+==14672==    by 0x486383B: sem_open@* (drd_pthread_intercepts.c:1513)
+==14672==    by 0x10A566: set_sems (set_args_bonus.c:33)
+==14672==    by 0x10A6B7: set_args (set_args_bonus.c:59)
+==14672==    by 0x10926B: main (main_bonus.c:31)
+==14672== 
+==14678== Thread 4:
+==14678== Invalid semaphore: semaphore 0x487e000
+==14678==    at 0x4864A3A: sem_wait_intercept (drd_pthread_intercepts.c:1545)
+==14678==    by 0x4864A3A: sem_wait@* (drd_pthread_intercepts.c:1553)
+==14678==    by 0x109B54: stop_monitor (stop_monitor_bonus.c:22)
+==14678==    by 0x484DD34: vgDrd_thread_wrapper (drd_pthread_intercepts.c:491)
+==14678==    by 0x490E1F4: start_thread (pthread_create.c:442)
+==14678==    by 0x498DAFF: clone (clone.S:100)
+==14678== semaphore 0x487e000 was first observed at:
+==14678==    at 0x486383B: sem_open_intercept (drd_pthread_intercepts.c:1502)
+==14678==    by 0x486383B: sem_open@* (drd_pthread_intercepts.c:1513)
+==14678==    by 0x10A4EA: set_sems (set_args_bonus.c:27)
+==14678==    by 0x10A6B7: set_args (set_args_bonus.c:59)
+==14678==    by 0x10926B: main (main_bonus.c:31)
+==14678== 
+==14681== Thread 4:
+==14681== Invalid semaphore: semaphore 0x487e000
+==14681==    at 0x4864A3A: sem_wait_intercept (drd_pthread_intercepts.c:1545)
+==14681==    by 0x4864A3A: sem_wait@* (drd_pthread_intercepts.c:1553)
+==14681==    by 0x109B54: stop_monitor (stop_monitor_bonus.c:22)
+==14681==    by 0x484DD34: vgDrd_thread_wrapper (drd_pthread_intercepts.c:491)
+==14681==    by 0x490E1F4: start_thread (pthread_create.c:442)
+==14681==    by 0x498DAFF: clone (clone.S:100)
+==14681== semaphore 0x487e000 was first observed at:
+==14681==    at 0x486383B: sem_open_intercept (drd_pthread_intercepts.c:1502)
+==14681==    by 0x486383B: sem_open@* (drd_pthread_intercepts.c:1513)
+==14681==    by 0x10A4EA: set_sems (set_args_bonus.c:27)
+==14681==    by 0x10A6B7: set_args (set_args_bonus.c:59)
+==14681==    by 0x10926B: main (main_bonus.c:31)
+==14681== 
+==14684== Thread 4:
+==14684== Invalid semaphore: semaphore 0x487e000
+==14684==    at 0x4864A3A: sem_wait_intercept (drd_pthread_intercepts.c:1545)
+==14684==    by 0x4864A3A: sem_wait@* (drd_pthread_intercepts.c:1553)
+==14684==    by 0x109B54: stop_monitor (stop_monitor_bonus.c:22)
+==14684==    by 0x484DD34: vgDrd_thread_wrapper (drd_pthread_intercepts.c:491)
+==14684==    by 0x490E1F4: start_thread (pthread_create.c:442)
+==14684==    by 0x498DAFF: clone (clone.S:100)
+==14684== semaphore 0x487e000 was first observed at:
+==14684==    at 0x486383B: sem_open_intercept (drd_pthread_intercepts.c:1502)
+==14684==    by 0x486383B: sem_open@* (drd_pthread_intercepts.c:1513)
+==14684==    by 0x10A4EA: set_sems (set_args_bonus.c:27)
+==14684==    by 0x10A6B7: set_args (set_args_bonus.c:59)
+==14684==    by 0x10926B: main (main_bonus.c:31)
+==14684== 
+==14684== 
+==14684== Process terminating with default action of signal 2 (SIGINT)
+==14677== 
+==14677== Process terminating with default action of signal 2 (SIGINT)
+==14678== 
+==14678== Process terminating with default action of signal 2 (SIGINT)
+==14681== 
+==14681== Process terminating with default action of signal 2 (SIGINT)
+==14675== 
+==14675== Process terminating with default action of signal 2 (SIGINT)
+==14684==    at 0x490AF16: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==14677==    at 0x490AF16: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==14672== 
+==14672== Process terminating with default action of signal 2 (SIGINT)
+==14684==    by 0x490AF16: __futex_abstimed_wait_common (futex-internal.c:87)
+==14681==    at 0x490AF16: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==14678==    at 0x490AF16: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==14675==    at 0x490AF16: __futex_abstimed_wait_common64 (futex-internal.c:57)
+==14677==    by 0x490AF16: __futex_abstimed_wait_common (futex-internal.c:87)
+==14684==    by 0x490FCE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==14681==    by 0x490AF16: __futex_abstimed_wait_common (futex-internal.c:87)
+==14678==    by 0x490AF16: __futex_abstimed_wait_common (futex-internal.c:87)
+==14675==    by 0x490AF16: __futex_abstimed_wait_common (futex-internal.c:87)
+==14672==    at 0x4958C17: wait4 (wait4.c:30)
+==14677==    by 0x490FCE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==14684==    by 0x484F9FF: pthread_join_intercept (drd_pthread_intercepts.c:755)
+==14681==    by 0x490FCE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==14678==    by 0x490FCE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==14675==    by 0x490FCE2: __pthread_clockjoin_ex (pthread_join_common.c:102)
+==14672==    by 0x109308: main (main_bonus.c:45)
+==14677==    by 0x484F9FF: pthread_join_intercept (drd_pthread_intercepts.c:755)
+==14684==    by 0x484F9FF: pthread_join@* (drd_pthread_intercepts.c:765)
+==14681==    by 0x484F9FF: pthread_join_intercept (drd_pthread_intercepts.c:755)
+==14678==    by 0x484F9FF: pthread_join_intercept (drd_pthread_intercepts.c:755)
+==14675==    by 0x484F9FF: pthread_join_intercept (drd_pthread_intercepts.c:755)
+==14677==    by 0x484F9FF: pthread_join@* (drd_pthread_intercepts.c:765)
+==14684==    by 0x109833: start_and_join_behaviours (philo_start_bonus.c:45)
+==14681==    by 0x484F9FF: pthread_join@* (drd_pthread_intercepts.c:765)
+==14678==    by 0x484F9FF: pthread_join@* (drd_pthread_intercepts.c:765)
+==14678==    by 0x109833: start_and_join_behaviours (philo_start_bonus.c:45)
+==14672== 
+==14675==    by 0x484F9FF: pthread_join@* (drd_pthread_intercepts.c:765)
+==14677==    by 0x109833: start_and_join_behaviours (philo_start_bonus.c:45)
+==14675==    by 0x109833: start_and_join_behaviours (philo_start_bonus.c:45)
+==14684==    by 0x109991: philo_start (philo_start_bonus.c:90)
+==14681==    by 0x109833: start_and_join_behaviours (philo_start_bonus.c:45)
+==14678==    by 0x109991: philo_start (philo_start_bonus.c:90)
+==14672== For lists of detected and suppressed errors, rerun with: -s
+==14672== ERROR SUMMARY: 5 errors from 1 contexts (suppressed: 24 from 14)
+==14677==    by 0x109991: philo_start (philo_start_bonus.c:90)
+==14675==    by 0x109991: philo_start (philo_start_bonus.c:90)
+==14684==    by 0x1092E8: main (main_bonus.c:42)
+==14681==    by 0x109991: philo_start (philo_start_bonus.c:90)
+==14678==    by 0x1092E8: main (main_bonus.c:42)
+==14677==    by 0x1092E8: main (main_bonus.c:42)
+==14675==    by 0x1092E8: main (main_bonus.c:42)
+==14681==    by 0x1092E8: main (main_bonus.c:42)
+==14677== 
+==14677== For lists of detected and suppressed errors, rerun with: -s
+==14681== 
+==14677== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 37 from 22)
+==14684== 
+==14681== For lists of detected and suppressed errors, rerun with: -s
+==14684== For lists of detected and suppressed errors, rerun with: -s
+==14681== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 33 from 23)
+==14684== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 33 from 23)
+==14678== 
+==14678== For lists of detected and suppressed errors, rerun with: -s
+==14678== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 24 from 14)
+==14675== 
+==14675== For lists of detected and suppressed errors, rerun with: -s
+==14675== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 31 from 23)

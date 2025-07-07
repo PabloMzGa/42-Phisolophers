@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 12:45:59 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/07 21:10:56 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,29 @@ typedef struct s_philosopher
 	sem_t			*last_meal_sem;
 	unsigned int	local_stop;
 	sem_t			*local_stop_sem;
+	sem_t			*death_monitor_end_sem;
 	pid_t			pid;
 	t_args			*args;
 }					t_philo;
 
 ////////////////////////////// PHILO - BEHAVIOUR ///////////////////////////////
 
+/**
+ * @brief Initializes and starts philosopher processes.
+ *
+ * This function iterates over the number of philosophers specified in the
+ * arguments, creating a philosopher structure for each one. For each
+ * philosopher, it attempts to fork a new process. If the creation of a
+ * philosopher fails, it triggers an emergency stop if at least one
+ * philosopher was already created, and returns NULL to indicate failure.
+ *
+ * @param args Pointer to the arguments structure containing simulation
+ *             parameters, including the number of philosophers.
+ * @return Always returns NULL. The function's main purpose is to start the
+ *         philosopher processes as side effects.
+ */
 t_philo				*philo_start(t_args *args);
+
 void				philo_eat(t_philo *philo);
 int					check_philo_death(t_philo *philo);
 
@@ -115,17 +131,18 @@ sem_t				*get_sem_numbered(char *name, unsigned int id, int value,
 unsigned int		get_time_ms(void);
 
 /**
- * @brief Initializes the simulation arguments and named semaphores.
+ * @brief Initializes the arguments structure with values from command-line
+ *        arguments.
  *
- * Parses command-line arguments to set up the simulation parameters in the
- * provided t_args structure. Initializes and unlinks named POSIX semaphores
- * for forks, full philosophers, and death detection. Handles error cases
- * by closing any previously opened semaphores and returning an error code.
+ * This function sets up the fields of the t_args structure using the provided
+ * command-line arguments. It initializes semaphore pointers to NULL, parses
+ * integer values from argv, sets the epoch to the current time in
+ * milliseconds, and calls set_sems() to initialize semaphores.
  *
  * @param args Pointer to the t_args structure to be initialized.
- * @param argc Argument count from main.
- * @param argv Argument vector from main.
- * @return int Returns 0 on success, or 1 on failure to initialize semaphores.
+ * @param argc The number of command-line arguments.
+ * @param argv The array of command-line argument strings.
+ * @return int Returns the result of set_sems(args).
  */
 int					set_args(t_args *args, int argc, char *argv[]);
 
@@ -291,26 +308,69 @@ char				*ft_uitoa(unsigned int n);
 ////////////////////////// UTILS - PHILO LIST HELPERS //////////////////////////
 
 /**
- * @brief Adds a new philosopher node to the end of the philosopher list.
+ * @brief Creates and initializes a new philosopher structure.
  *
- * This function appends the given 'new' philosopher node to the end of the
- * doubly linked list pointed to by 'philo_lst'. If the list is empty,
- * 'new' becomes the first node. If either 'philo_lst' or 'new' is NULL,
- * the function does nothing.
+ * Allocates memory for a new t_philo instance, sets its ID, initializes
+ * the number of times eaten to zero, records the current timestamp as the
+ * last meal time, and sets semaphore pointers and local stop flag to their
+ * initial states. Associates the philosopher with the provided arguments.
  *
- * @param philo_lst Pointer to the head pointer of the philosopher list.
- * @param new Pointer to the new philosopher node to be added.
+ * @param id   The unique identifier for the philosopher.
+ * @param args Pointer to the shared arguments structure.
+ * @return     Pointer to the newly created t_philo structure, or NULL on
+ *             failure.
  */
 t_philo				*create_philo(unsigned int id, t_args *args);
 
+/**
+ * @brief Cleans up resources associated with a philosopher instance.
+ *
+ * This function closes all semaphores associated with the given philosopher,
+ * including argument semaphores, last meal semaphore, local stop semaphore,
+ * and death monitor end semaphore, if they are valid and open. It then frees
+ * the memory allocated for the philosopher structure.
+ *
+ * @param philo Pointer to the philosopher structure to be cleaned up.
+ */
 void				clean_philos(t_philo *philo);
 
+/**
+ * @brief Closes all open semaphores associated with the given arguments.
+ *
+ * This function checks each semaphore pointer in the provided t_args structure.
+ * If a semaphore is valid (not NULL and not SEM_FAILED), it is closed using
+ * sem_close. The full_sem semaphore is only closed if n_eat is greater than 0.
+ *
+ * @param args Pointer to the t_args structure containing semaphore handles.
+ */
 void				close_args_sems(t_args *args);
 
 //////////////////////////// UTILS - SEM OPERATIOS /////////////////////////////
 
+/**
+ * @brief Safely performs a wait (decrement) operation on a semaphore.
+ *
+ * This function attempts to decrement (lock) the semaphore pointed to by `sem`.
+ * If the semaphore pointer is NULL or if the `sem_wait` operation fails,
+ * an error message is printed and the function returns 1 to indicate failure.
+ * On success, returns 0.
+ *
+ * @param sem Pointer to the semaphore to wait on.
+ * @return int 0 on success, 1 on failure.
+ */
 int					safe_sem_wait(sem_t *sem);
 
+/**
+ * @brief Safely posts (increments) a semaphore.
+ *
+ * This function attempts to increment (post) the given semaphore.
+ * If the semaphore pointer is not NULL, it calls sem_post on it.
+ * If sem_post fails, an error message is printed and the function returns 1.
+ * Otherwise, it returns 0 on success.
+ *
+ * @param sem Pointer to the semaphore to be incremented.
+ * @return int Returns 0 on success, 1 if sem_post fails.
+ */
 int					safe_sem_post(sem_t *sem);
 
 int					safe_single_printf(char *string, t_args *args);
