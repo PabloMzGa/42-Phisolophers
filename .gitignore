@@ -1,4 +1,5 @@
 build/*
+build_bonus/*
 *.out
 *.a
 *.o
