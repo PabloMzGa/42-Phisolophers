@@ -6,11 +6,10 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:31:19 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/07 17:44:56 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:59:06 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
 /**

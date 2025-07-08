@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_uitoa.c                                         :+:      :+:    :+:   */
+/*   ft_uitoa_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/17 11:40:58 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/26 12:17:19 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:59:57 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ static char	*set_numbers(char *str, unsigned int n, unsigned int len)
 char	*ft_uitoa(unsigned int n)
 {
 	unsigned int	len;
-	char	*str;
+	char			*str;
 
 	len = count_digits(n);
 	str = malloc(sizeof(char) * (len + 1));

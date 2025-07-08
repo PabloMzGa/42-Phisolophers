@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/04 13:11:36 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 14:02:38 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,10 @@ static int	should_continue(t_philo *philos, int all_full, int someone_died)
  */
 static int	check_all_philosophers(t_philo *philos, int *all_full)
 {
-	t_philo	*current_philo;
+	t_philo			*current_philo;
 	unsigned int	i;
-	int		someone_died;
-	int		status;
+	int				someone_died;
+	int				status;
 
 	current_philo = philos;
 	i = 0;

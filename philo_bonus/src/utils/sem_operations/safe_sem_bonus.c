@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 19:40:55 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/07 21:10:51 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 14:00:17 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ int	safe_sem_wait(sem_t *sem)
 int	safe_sem_post(sem_t *sem)
 {
 	int	status;
+
 	if (sem)
 	{
 		status = sem_post(sem);

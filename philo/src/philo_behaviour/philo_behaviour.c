@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_behaviour.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 21:22:16 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 17:59:40 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:02:18 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ static void	behaviour_loop(t_philo *philo)
 		if (philo->next)
 		{
 			philosopher_eat(philo);
-			if (philo->args->n_eat != 0 && philo->n_eat >=
-				philo->args->n_eat && get_philo_status(philo) != FULL)
+			if (philo->args->n_eat != 0 && philo->n_eat >= philo->args->n_eat
+				&& get_philo_status(philo) != FULL)
 				set_philo_status(philo, FULL);
 			philosopher_sleep_think(philo);
 		}

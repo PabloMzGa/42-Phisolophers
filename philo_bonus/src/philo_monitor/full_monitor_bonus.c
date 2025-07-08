@@ -6,11 +6,10 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/07 17:12:47 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:10:28 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "colors_bonus.h"
 #include "philosophers_bonus.h"
 
 void	*full_monitor(void *args)
@@ -31,6 +30,5 @@ void	*full_monitor(void *args)
 		safe_sem_post(targs->stop_sem);
 		++i;
 	}
-
 	return (NULL);
 }

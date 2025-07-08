@@ -6,21 +6,12 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:39:39 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/07 22:42:05 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 14:01:05 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "colors_bonus.h"
 #include "philosophers_bonus.h"
-
-/**
- * TODO: Ahora por alguna razón el programa no termina lo suficientemente
- * después de moprir un filósofo, pudiendo el mismo filósofo morir varias veces.
- *
- * Podrías er que se lanzan más hilos de la cuenta o vete tu a saber. También
- * se queda bloqueado a veces. Quizás valgrind ayude
-*/
-
 
 /**
  * @brief Initializes the program arguments and optionally starts the full
@@ -39,7 +30,7 @@
  * failed setup, or thread creation error).
  */
 static int	init(int argc, char *argv[], t_args *args,
-			pthread_t *full_monitor_id)
+		pthread_t *full_monitor_id)
 {
 	if (!check_args(argc, argv))
 		return (1);
@@ -60,23 +51,20 @@ static int	init(int argc, char *argv[], t_args *args,
 int	main(int argc, char *argv[])
 {
 	t_args		args;
-	t_philo		*philo;
+	int			philo_status;
 	pthread_t	full_monitor_id;
 
+	full_monitor_id = 0;
 	if (init(argc, argv, &args, &full_monitor_id))
 		return (1);
-	philo = philo_start(&args);
-	if (!philo)
+	philo_status = philo_start(&args);
+	if (!philo_status)
 	{
 		while (waitpid(-1, NULL, 0) > 0)
 			;
-		pthread_join(full_monitor_id, NULL);
+		if (full_monitor_id)
+			pthread_join(full_monitor_id, NULL);
 		close_args_sems(&args);
-	}
-	else
-	{
-		safe_sem_wait(philo->death_monitor_end_sem);
-		clean_philos(philo);
 	}
 	return (0);
 }

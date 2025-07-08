@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:38:09 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 12:17:10 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 14:05:36 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
  */
 void	wait_philo_end(t_philo *philos)
 {
-	t_philo	*current_philo;
+	t_philo			*current_philo;
 	unsigned int	i;
 
 	current_philo = philos;
@@ -52,7 +52,7 @@ void	wait_philo_end(t_philo *philos)
  */
 static int	start_loop(t_philo *philos)
 {
-	t_philo	*current_philo;
+	t_philo			*current_philo;
 	unsigned int	i;
 
 	current_philo = philos;

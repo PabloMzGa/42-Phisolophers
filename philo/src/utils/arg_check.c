@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 00:14:10 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:10:29 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:06:19 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,14 +85,12 @@ int	check_args(int argc, char *argv[])
 {
 	if (argc < 5)
 		return (printf(RED "Not enough arguments!\n" RESET BOLD "Usage: " RESET
-			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-			" [n_times_each_philo_must_eat]\n\n" RESET),
-				0);
+				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
 	else if (argc > 6)
 		return (printf(RED "Too many arguments!\n" RESET BOLD "Usage: " RESET
-			"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-			" [n_times_each_philo_must_eat]\n\n" RESET),
-				0);
+				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
+				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
 	if (!validate_argv_numbers(argc, argv))
 		return (0);
 	else

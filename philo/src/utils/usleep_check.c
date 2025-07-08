@@ -6,22 +6,22 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/25 16:23:38 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/06/26 12:38:06 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 14:06:24 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philosophers.h"
 
-void usleep_check(unsigned int sleep, t_args *args)
+void	usleep_check(unsigned int sleep, t_args *args)
 {
-	unsigned int sleep_counter;
-	unsigned int next_microsleep;
+	unsigned int	sleep_counter;
+	unsigned int	next_microsleep;
 
 	sleep_counter = 0;
 	while (sleep_counter < sleep)
 	{
 		if (!get_simulation_running(args))
-			return;
+			return ;
 		if (sleep - sleep_counter < MICROSLEEP_MS)
 			next_microsleep = sleep - sleep_counter;
 		else

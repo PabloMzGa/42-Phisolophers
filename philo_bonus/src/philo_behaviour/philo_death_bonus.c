@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:55:05 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/03 14:02:51 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:52:53 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,11 @@ static int	check_death_conditions(t_philo *philo, long current_time,
 	elapsed = current_time - last_meal;
 	if (elapsed > philo->args->time_die)
 		dead = 1;
-	/**/
 	if (dead)
 	{
 		safe_log_printf("%10u " BOLD MAGENTA
-			"%u" RESET RED " has died" RESET "\n", philo->id, philo->args, philo);
+			"%u" RESET RED " has died" RESET "\n", philo->id, philo->args,
+			philo);
 		set_local_stop(philo, 1);
 	}
 	return (dead);
@@ -60,7 +60,6 @@ int	check_philo_death(t_philo *philo)
 	unsigned int	last_meal;
 
 	current_time = get_time_ms();
-	if (get_last_meal(philo, &last_meal))
-		return (1);
+	get_last_meal(philo, &last_meal);
 	return (check_death_conditions(philo, current_time, last_meal));
 }

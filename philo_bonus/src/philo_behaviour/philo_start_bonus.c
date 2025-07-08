@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/07 22:31:35 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:59:48 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ static int	start_and_join_behaviours(t_philo *philo)
 			1);
 	if (pthread_create(&death_monitor_id, NULL, death_monitor, philo) != 0)
 		return (printf(RED "Error: Failed to create death monitor thread\n"
-			RESET), 1);
+				RESET), 1);
 	if (pthread_create(&stop_monitor_id, NULL, stop_monitor, philo) != 0)
 		return (printf(RED "Error: Failed to create death stop monitor thread\n"
-			RESET), 1);
+				RESET), 1);
 	pthread_detach(stop_monitor_id);
 	pthread_detach(death_monitor_id);
 	pthread_join(behaviour_thread_id, NULL);
@@ -119,24 +119,24 @@ static void	emergency_stop(t_args *args)
 }
 
 /**
- * @brief Creates a new process for a philosopher and starts its behaviour.
+ * @brief Forks a new process to start philosopher behaviors.
  *
- * This function forks the current process to create a new philosopher process.
- * In the child process, it opens the necessary semaphores and starts the
- * philosopher's behaviour routines. If an error occurs during the behaviour
- * startup, it triggers an emergency stop if more than one philosopher exists,
- * frees the philosopher structure, and returns NULL. In the parent process,
- * if fork fails, it also triggers an emergency stop if needed, frees the
- * philosopher structure, and returns NULL. Otherwise, it returns the PID of
- * the newly created child process.
+ * This function creates a child process using fork(). In the child process,
+ * it attempts to start and join philosopher behaviors by opening the necessary
+ * semaphores. If an error occurs during this process, it performs an emergency
+ * stop if there are multiple philosophers, frees allocated resources, and exits
+ * with status 1. If successful, it waits for the death monitor semaphore,
+ * cleans up philosopher resources, and exits with status 0.
  *
- * @param tmp_philo Pointer to the philosopher structure to be used by the new
- *        process.
- * @param counter The number of philosophers (used to determine if emergency
- *        stop is needed).
- * @return In the parent process, returns the PID of the child process on
- *         success, or NULL on failure. In the child process, returns
- *         tmp_philo on success, or NULL on failure.
+ * In the parent process, if fork() fails, it performs an emergency stop if
+ * there are multiple philosophers and returns -1. Otherwise, it returns the
+ * PID of the created child process.
+ *
+ * @param tmp_philo Pointer to the philosopher structure containing arguments
+ *                  and semaphores.
+ * @param counter   The number of philosophers (used to determine if emergency
+ *                  stop is needed).
+ * @return The PID of the created child process on success, -1 on failure.
  */
 static pid_t	philo_fork(t_philo *tmp_philo, unsigned int counter)
 {
@@ -150,21 +150,22 @@ static pid_t	philo_fork(t_philo *tmp_philo, unsigned int counter)
 			if (counter > 1)
 				emergency_stop(tmp_philo->args);
 			free(tmp_philo);
-			return (-1);
+			exit(1);
 		}
-		return (pid);
+		safe_sem_wait(tmp_philo->death_monitor_end_sem);
+		clean_philos(tmp_philo);
+		exit(0);
 	}
 	if (pid == -1)
 	{
 		if (counter > 1)
 			emergency_stop(tmp_philo->args);
-		free(tmp_philo);
 		return (-1);
 	}
 	return (pid);
 }
 
-t_philo	*philo_start(t_args *args)
+int	philo_start(t_args *args)
 {
 	unsigned int	counter;
 	t_philo			*tmp_philo;
@@ -177,13 +178,13 @@ t_philo	*philo_start(t_args *args)
 		{
 			if (counter > 1)
 				emergency_stop(args);
-			return (NULL);
+			return (1);
 		}
 		tmp_philo->pid = philo_fork(tmp_philo, counter);
 		if (tmp_philo->pid == -1)
-			return (NULL);
+			return (1);
 		free(tmp_philo);
 		++counter;
 	}
-	return (NULL);
+	return (0);
 }

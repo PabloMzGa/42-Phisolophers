@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_sleep_think.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:55:37 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/25 18:42:20 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/08 14:02:13 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 
 void	philosopher_sleep_think(t_philo *philo)
 {
-
 	if (get_simulation_running(philo->args))
 	{
 		if (safe_log_printf("%10u" BOLD MAGENTA
-			" %u" RESET BLUE " is sleeping\n" RESET, philo->id, philo->args))
+				" %u" RESET BLUE " is sleeping\n" RESET,
+				philo->id, philo->args))
 			return ;
 	}
 	usleep_check(philo->args->time_sleep, philo->args);

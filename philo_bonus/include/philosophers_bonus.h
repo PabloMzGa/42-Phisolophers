@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/07 21:10:56 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/08 13:57:55 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,29 @@
 
 //////////////////////////////////// ENUMS /////////////////////////////////////
 
+/**
+ * @struct s_args_info
+ * @brief Structure holding configuration and synchronization primitives for
+ *        the philosophers simulation.
+ *
+ * @param philo_n    Number of philosophers participating in the simulation.
+ * @param time_die   Time (in ms) a philosopher can go without eating before
+ *                   dying.
+ * @param time_eat   Time (in ms) a philosopher spends eating.
+ * @param time_sleep Time (in ms) a philosopher spends sleeping.
+ * @param n_eat      Number of times each philosopher must eat before the
+ *                   simulation ends. If zero, there is no limit.
+ * @param epoch      Timestamp marking the start of the simulation (used for
+ *                   time calculations).
+ * @param forks_sem  Semaphore used to control access to forks (shared
+ *                   resources).
+ * @param printf_sem Semaphore used to synchronize output to prevent message
+ *                   interleaving.
+ * @param stop_sem   Semaphore used to signal the end of the simulation (e.g.,
+ *                   when a philosopher dies).
+ * @param full_sem   Semaphore used to track when all philosophers have eaten
+ *                   the required number of times.
+ */
 typedef struct s_args_info
 {
 	unsigned int	philo_n;
@@ -43,6 +66,26 @@ typedef struct s_args_info
 	sem_t			*full_sem;
 }					t_args;
 
+/**
+ * @struct s_philosopher
+ * @brief Represents a philosopher in the dining philosophers simulation.
+ *
+ * @param id                     Unique identifier for the philosopher.
+ * @param n_eat                  Number of times the philosopher has eaten.
+ * @param last_meal_timestamp    Timestamp of the philosopher's last meal
+ *                              (in milliseconds).
+ * @param last_meal_sem          Semaphore to protect access to
+ *                              last_meal_timestamp.
+ * @param local_stop             Flag indicating if the philosopher should stop
+ *                              (local to the philosopher).
+ * @param local_stop_sem         Semaphore to protect access to local_stop.
+ * @param death_monitor_end_sem  Semaphore used to signal the end of the death
+ *                              monitoring process.
+ * @param pid                    Process ID of the philosopher (used for
+ *                              process management).
+ * @param args                   Pointer to shared simulation arguments and
+ *                              configuration.
+ */
 typedef struct s_philosopher
 {
 	unsigned int	id;
@@ -59,31 +102,133 @@ typedef struct s_philosopher
 ////////////////////////////// PHILO - BEHAVIOUR ///////////////////////////////
 
 /**
- * @brief Initializes and starts philosopher processes.
+ * @brief Starts the philosopher processes.
  *
- * This function iterates over the number of philosophers specified in the
- * arguments, creating a philosopher structure for each one. For each
- * philosopher, it attempts to fork a new process. If the creation of a
- * philosopher fails, it triggers an emergency stop if at least one
- * philosopher was already created, and returns NULL to indicate failure.
+ * This function iterates through the number of philosophers specified in the
+ * arguments, creates a philosopher structure for each, and forks a new process
+ * for each philosopher. If philosopher creation or forking fails, it handles
+ * cleanup and returns an error code.
  *
  * @param args Pointer to the arguments structure containing simulation
- *             parameters, including the number of philosophers.
- * @return Always returns NULL. The function's main purpose is to start the
- *         philosopher processes as side effects.
+ *             parameters.
+ * @return int Returns 0 on success, 1 on failure.
  */
-t_philo				*philo_start(t_args *args);
+int					philo_start(t_args *args);
 
-void				philo_eat(t_philo *philo);
+/**
+ * @brief Handles the fork pick up and eating behavior of a philosopher.
+ *
+ * This function manages the process of a philosopher attempting to eat.
+ * It first checks if the philosopher should stop (using get_local_stop).
+ * If not, it attempts to pick up the first fork. If the philosopher is alone,
+ * it returns early since eating is not possible. Otherwise, it attempts to
+ * pick up the second fork and then proceeds to handle the eating process.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return int Returns 1 if the philosopher should stop or failed to pick up a
+ *         fork, 0 if the eating process was handled successfully or if the
+ *         philosopher is alone.
+ */
+int					philo_eat(t_philo *philo);
+
+/**
+ * @brief Checks if the philosopher has died based on the time since their last
+ * meal.
+ *
+ * This function retrieves the current time and the time of the philosopher's
+ * last meal, then determines if the philosopher should be considered dead
+ * according to the simulation's rules.
+ *
+ * @param philo Pointer to the philosopher structure whose death status is being
+ * checked.
+ * @return int Returns a non-zero value if the philosopher has died, otherwise
+ * returns 0.
+ */
 int					check_philo_death(t_philo *philo);
 
+/**
+ * @brief Main loop for philosopher behavior in the dining philosophers
+ *        problem.
+ *
+ * This function represents the main execution loop for a philosopher
+ * thread/process. It repeatedly checks if the philosopher should stop,
+ * attempts to eat, handles the case where only one fork is available,
+ * manages semaphore limits, and performs sleeping and thinking actions.
+ * The loop continues until a stop condition is met or an action
+ * (eating, sleeping, or thinking) signals to break the loop.
+ *
+ * @param args Pointer to a t_philo structure containing philosopher state
+ *        and arguments.
+ * @return Always returns NULL.
+ */
 void				*philo_behaviour_loop(void *args);
-void				philo_sleep_think(t_philo *philo);
+
+/**
+ * @brief Handles the sleeping and thinking behavior of a philosopher.
+ *
+ * This function manages the transition of a philosopher to the sleeping state,
+ * waits for the specified sleep duration, and then transitions the philosopher
+ * to the thinking state. It also introduces a small, variable delay before
+ * thinking to help reduce contention between philosophers.
+ *
+ * The function checks for a local stop condition before and after sleeping,
+ * and returns early if the philosopher should stop. Logging is performed for
+ * both sleeping and thinking states.
+ *
+ * @param philo Pointer to the philosopher structure.
+ * @return int Returns 1 if a stop condition is detected, otherwise 0.
+ */
+int					philo_sleep_think(t_philo *philo);
 
 /////////////////////////////// PHILO - MONITOR ////////////////////////////////
 
+/**
+ * @brief Monitors the death status of a philosopher in a concurrent
+ * environment.
+ *
+ * This function runs as a separate thread for each philosopher. It
+ * continuously checks if the philosopher has died or if a local stop
+ * condition has been triggered. If a local stop is detected, it signals
+ * the end of the death monitor and exits. If the philosopher dies, it
+ * posts to the stop semaphore for all philosophers to signal termination,
+ * then signals the end of the death monitor.
+ *
+ * @param args Pointer to the philosopher structure (t_philo *).
+ * @return NULL Always returns NULL after signaling the end of the monitor.
+ */
 void				*death_monitor(void *args);
+
+/**
+ * @brief Monitor function to handle the stopping condition for philosophers.
+ *
+ * This function waits on the stop semaphore to be signaled, indicating that the
+ * simulation should stop (e.g., a philosopher has died or the simulation is
+ * complete). Once the semaphore is acquired,
+	it sets the local stop flag for the
+ * philosopher. If a required number of meals (`n_eat`) is specified,
+	it posts to
+ * the full semaphore for each philosopher to signal completion.
+ *
+ * @param args Pointer to a t_philo structure representing the philosopher.
+ * @return Always returns NULL.
+ */
 void				*stop_monitor(void *args);
+
+/**
+ * @brief Monitors when all philosophers have finished eating.
+ *
+ * This function waits for each philosopher to signal that they are "full"
+ * by waiting on the `full_sem` semaphore `philo_n` times. Once all
+ * philosophers have signaled, it posts to the `stop_sem` semaphore
+ * `philo_n` times to notify all waiting processes or threads that the
+ * simulation can stop.
+ *
+ * @param args Pointer to a `t_args` structure containing simulation
+ *             parameters, including the number of philosophers
+ *             (`philo_n`), and the semaphores (`full_sem` and
+ *             `stop_sem`).
+ * @return Always returns NULL.
+ */
 void				*full_monitor(void *args);
 
 //////////////////////////////// UTILS - MISC /////////////////////////////////
@@ -146,6 +291,19 @@ unsigned int		get_time_ms(void);
  */
 int					set_args(t_args *args, int argc, char *argv[]);
 
+/**
+ * @brief Sleeps for a specified duration in milliseconds, periodically
+ *        checking a stop condition.
+ *
+ * This function sleeps for the given number of milliseconds, but wakes up
+ * in small intervals (up to 10 ms) to check if a stop condition has been
+ * triggered for the given philosopher. If the stop condition is met, the
+ * function returns early.
+ *
+ * @param sleep The total sleep duration in milliseconds.
+ * @param philo Pointer to the philosopher structure, used to check the
+ *              stop condition.
+ */
 void				usleep_check(unsigned int sleep, t_philo *philo);
 
 ///////////////////////////////// UTILS - PARSE ////////////////////////////////
@@ -373,9 +531,37 @@ int					safe_sem_wait(sem_t *sem);
  */
 int					safe_sem_post(sem_t *sem);
 
+/**
+ * @brief Safely prints a string using a semaphore to ensure exclusive access.
+ *
+ * This function waits on the provided semaphore before printing the given
+ * string, ensuring that only one process/thread can print at a time. After
+ * printing, it posts to the semaphore to release it. If waiting or posting to
+ * the semaphore fails, the function returns 1 to indicate an error.
+ *
+ * @param string The string to be printed.
+ * @param args Pointer to a t_args structure containing the printf semaphore.
+ * @return int Returns 0 on success, or 1 if a semaphore operation fails.
+ */
 int					safe_single_printf(char *string, t_args *args);
 
-int					safe_log_printf(char *string, unsigned int id, t_args *args,
+/**
+ * @brief Safely prints a log message with synchronization using a semaphore.
+ *
+ * This function prints a formatted log message to the standard output,
+ * ensuring that only one process/thread prints at a time by using a
+ * semaphore. It also checks if the philosopher has stopped before and
+ * after acquiring the semaphore to avoid printing unnecessary messages.
+ *
+ * @param string The format string to print (should include placeholders
+ *               for time and id).
+ * @param id The identifier to be printed in the log message.
+ * @param args Pointer to the shared arguments structure containing the
+ *             semaphore and epoch.
+ * @param philo Pointer to the philosopher structure, used to check the
+ *              stop condition.
+ */
+void				safe_log_printf(char *string, unsigned int id, t_args *args,
 						t_philo *philo);
 /**
  * @brief Safely retrieves the last meal timestamp of a philosopher.
@@ -389,21 +575,51 @@ int					safe_log_printf(char *string, unsigned int id, t_args *args,
  *              is to be retrieved.
  * @param last_meal Pointer to a int where the retrieved timestamp will be
  *                  stored.
- * @return Always returns 0.
  */
-int					get_last_meal(t_philo *philo, unsigned int *last_meal);
+void				get_last_meal(t_philo *philo, unsigned int *last_meal);
 
-int					set_last_meal(t_philo *philo, unsigned int last_meal);
+/**
+ * @brief Safely sets the last meal timestamp for a philosopher.
+ *
+ * This function updates the last_meal_timestamp field of the given
+ * philosopher structure in a thread-safe manner by using a semaphore
+ * to protect the critical section.
+ *
+ * @param philo Pointer to the philosopher structure whose last meal
+ * timestamp is to be set.
+ * @param last_meal The new timestamp value to set as the last meal time.
+ */
+void				set_last_meal(t_philo *philo, unsigned int last_meal);
 
-int					get_local_stop(t_philo *philo, unsigned int *local_stop);
+/**
+ * @brief Safely retrieves the value of the local_stop flag for a philosopher.
+ *
+ * This function acquires a semaphore to ensure thread-safe access to the
+ * local_stop variable of the given philosopher. It stores the value of
+ * philo->local_stop into the provided local_stop pointer, then releases
+ * the semaphore.
+ *
+ * @param philo Pointer to the philosopher structure whose local_stop value is
+ *              to be read.
+ * @param local_stop Pointer to an unsigned int where the local_stop value will
+ *                   be stored.
+ */
+void				get_local_stop(t_philo *philo, unsigned int *local_stop);
 
-int					set_local_stop(t_philo *philo, unsigned int local_stop);
-
-int					get_main_thread_ended(t_philo *philo,
-						unsigned int *main_thread_ended);
-
-int					set_main_thread_ended(t_philo *philo,
-						unsigned int main_thread_ended);
+/**
+ * @brief Sets the local stop flag for a philosopher in a thread-safe manner.
+ *
+ * This function acquires the semaphore associated with the philosopher's
+ * local stop flag, updates the flag with the provided value, and then
+ * releases the semaphore. This ensures that the update operation is
+ * performed atomically and prevents race conditions in concurrent
+ * environments.
+ *
+ * @param philo Pointer to the philosopher structure whose local stop flag
+ * is to be set.
+ * @param local_stop The value to set for the local stop flag.
+ */
+void				set_local_stop(t_philo *philo, unsigned int local_stop);
 
 /**
  * @brief Waits on the stop semaphore for each philosopher.
