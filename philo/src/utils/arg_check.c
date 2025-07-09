@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   arg_check.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 00:14:10 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/08 14:06:19 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:57:38 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ static int	validate_argv_numbers(int argc, char *argv[])
 		if (!is_valid_number(argv[i]))
 		{
 			printf(RED "Error: Argument %d ('%s') is not a valid number!\n"
-				RESET BOLD YELLOW "All arguments must be between 1 and %u.\n\n"
-				RESET, i, argv[i], UINT_MAX);
+				RESET BOLD YELLOW "All arguments must be between 1 and %u.\n"
+				RESET "\n", i, argv[i], UINT_MAX);
 			return (0);
 		}
 		i++;
@@ -86,11 +86,11 @@ int	check_args(int argc, char *argv[])
 	if (argc < 5)
 		return (printf(RED "Not enough arguments!\n" RESET BOLD "Usage: " RESET
 				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
+				" [n_times_each_philo_must_eat]\n" RESET "\n"), 0);
 	else if (argc > 6)
 		return (printf(RED "Too many arguments!\n" RESET BOLD "Usage: " RESET
 				"./philo " ITALIC "n_philos t_die t_eat t_sleep"
-				" [n_times_each_philo_must_eat]\n\n" RESET), 0);
+				" [n_times_each_philo_must_eat]\n" RESET "\n"), 0);
 	if (!validate_argv_numbers(argc, argv))
 		return (0);
 	else

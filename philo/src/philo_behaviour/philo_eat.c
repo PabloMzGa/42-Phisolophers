@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 13:53:30 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/09 13:56:06 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static int	acquire_first_fork(t_philo *philo, pthread_mutex_t *f_mutex)
 		return (1);
 	if (check_stop(philo, f_mutex, NULL))
 		return (1);
-	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
-			" has taken a fork\n" RESET, philo->id, philo->args))
+	if (safe_log_printf("%10u " BOLD MAGENTA "%u" RESET GREEN
+			" has taken a fork" RESET "\n", philo->id, philo->args))
 		return (1);
 	return (0);
 }
@@ -51,7 +51,7 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 	if (check_stop(philo, f_mutex, s_mutex))
 		return (1);
 	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
-			" has taken a fork\n" RESET, philo->id, philo->args))
+			" has taken a fork" RESET "\n", philo->id, philo->args))
 		return (1);
 	return (0);
 }
@@ -64,7 +64,7 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 static void	perform_eating(t_philo *philo)
 {
 	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET YELLOW
-			" is eating\n" RESET, philo->id,
+			" is eating" RESET "\n", philo->id,
 			philo->args))
 		return ;
 	if (safe_mutex_lock(&philo->internal_mutex, philo->args))

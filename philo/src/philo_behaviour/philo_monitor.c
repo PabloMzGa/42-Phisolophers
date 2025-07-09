@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_monitor.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/08 14:02:38 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:56:19 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ static void	*monitor_routine(void *args)
 	{
 		set_simulation_running(philos->args, 0);
 		safe_single_printf(BOLD GREEN "All philosophers have eaten the target "
-			"number of times, ending simulation\n" RESET, philos->args);
+			"number of times, ending simulation" RESET "\n", philos->args);
 	}
 	return (NULL);
 }
@@ -136,7 +136,7 @@ pthread_t	start_monitor(t_philo *philos)
 
 	if (pthread_create(&monitor_thread, NULL, monitor_routine, philos) != 0)
 	{
-		printf(RED "Error: Failed to create monitor thread\n" RESET);
+		printf(RED "Error: Failed to create monitor thread" RESET "\n");
 		if (safe_mutex_lock(&philos->args->simulation_mutex, philos->args))
 			return (0);
 		set_simulation_running(philos->args, 0);

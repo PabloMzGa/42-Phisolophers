@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 19:40:55 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/24 12:16:49 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/09 13:57:51 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int	safe_mutex_lock(pthread_mutex_t *mutex, t_args *args)
 	status = pthread_mutex_lock(mutex);
 	if (status != 0)
 	{
-		printf(RED "Error: pthread_mutex_lock failed with code %d\n" RESET,
+		printf(RED "Error: pthread_mutex_lock failed with code %d" RESET "\n",
 			status);
 		if (args && mutex != &args->simulation_mutex)
 		{
@@ -40,7 +40,7 @@ int	safe_mutex_unlock(pthread_mutex_t *mutex, t_args *args)
 	status = pthread_mutex_unlock(mutex);
 	if (status != 0)
 	{
-		printf(RED "Error: pthread_mutex_unlock failed with code %d\n" RESET,
+		printf(RED "Error: pthread_mutex_unlock failed with code %d" RESET "\n",
 			status);
 		if (args && mutex != &args->simulation_mutex)
 		{
