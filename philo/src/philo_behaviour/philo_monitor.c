@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/23 20:08:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 13:56:19 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:16:32 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ static int	check_all_philosophers(t_philo *philos, int *all_full)
 	someone_died = 0;
 	while (i < philos->args->philo_n && !someone_died)
 	{
-		status = get_philo_status(philos);
+		status = get_philo_status(current_philo);
 		if (status == -1)
 			return (1);
 		if (status != FULL)

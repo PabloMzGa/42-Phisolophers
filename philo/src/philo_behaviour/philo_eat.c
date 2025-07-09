@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 13:56:06 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/09 14:53:55 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 	if (check_stop(philo, f_mutex, s_mutex))
 		return (1);
 	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN
-			" has taken a fork" RESET "\n", philo->id, philo->args))
+			" has taken a fork " RESET "\n", philo->id, philo->args))
 		return (1);
 	return (0);
 }
@@ -63,9 +63,8 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
  */
 static void	perform_eating(t_philo *philo)
 {
-	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET YELLOW
-			" is eating" RESET "\n", philo->id,
-			philo->args))
+	if (safe_log_printf("%10u" BOLD MAGENTA " %u" RESET YELLOW " is eating"
+			RESET "\n", philo->id, philo->args))
 		return ;
 	if (safe_mutex_lock(&philo->internal_mutex, philo->args))
 		return ;
@@ -74,20 +73,6 @@ static void	perform_eating(t_philo *philo)
 		return ;
 	usleep_check(philo->args->time_eat, philo->args);
 	philo->n_eat++;
-}
-
-/**
- * @brief Releases both forks (mutexes) with error checking.
- *
- * @param philo   Pointer to the philosopher structure.
- * @param f_mutex Pointer to the first mutex to unlock.
- * @param s_mutex Pointer to the second mutex to unlock.
- */
-static void	release_forks(t_philo *philo, pthread_mutex_t *f_mutex,
-		pthread_mutex_t *s_mutex)
-{
-	safe_mutex_unlock(f_mutex, philo->args);
-	safe_mutex_unlock(s_mutex, philo->args);
 }
 
 void	philosopher_eat(t_philo *philo)
@@ -100,15 +85,21 @@ void	philosopher_eat(t_philo *philo)
 	select_mutex(&f_mutex, &s_mutex, philo);
 	first_acquired = 0;
 	second_acquired = 0;
-	if (get_simulation_running(philo->args)
-		&& !acquire_first_fork(philo, f_mutex))
+	if (get_simulation_running(philo->args) && !acquire_first_fork(philo,
+			f_mutex))
 		first_acquired = 1;
-	if (first_acquired && get_simulation_running(philo->args)
-		&& !acquire_second_fork(philo, f_mutex, s_mutex))
-		second_acquired = 1;
+	if (first_acquired && get_simulation_running(philo->args))
+	{
+		if (!acquire_second_fork(philo, f_mutex, s_mutex))
+			second_acquired = 1;
+		else
+			first_acquired = 0;
+	}
 	if (first_acquired && second_acquired
 		&& get_simulation_running(philo->args))
 		perform_eating(philo);
-	if (first_acquired && second_acquired)
-		release_forks(philo, f_mutex, s_mutex);
+	if (first_acquired)
+		safe_mutex_unlock(f_mutex, philo->args);
+	if (second_acquired)
+		safe_mutex_unlock(s_mutex, philo->args);
 }
