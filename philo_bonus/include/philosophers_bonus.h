@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/08 13:57:55 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:19:58 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ typedef struct s_args_info
 	unsigned int	n_eat;
 	unsigned int	epoch;
 	sem_t			*forks_sem;
+	sem_t			*grabbing_forks_sem;
 	sem_t			*printf_sem;
 	sem_t			*stop_sem;
 	sem_t			*full_sem;

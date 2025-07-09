@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_eat.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 23:53:12 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/08 14:05:16 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:52:07 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ static int	acquire_second_fork(t_philo *philo, pthread_mutex_t *f_mutex,
 {
 	if (safe_mutex_lock(s_mutex, philo->args))
 	{
-		pthread_mutex_unlock(f_mutex);
+		safe_mutex_unlock(f_mutex, philo->args);
 		return (1);
 	}
 	if (check_stop(philo, f_mutex, s_mutex))
@@ -94,15 +94,21 @@ void	philosopher_eat(t_philo *philo)
 {
 	pthread_mutex_t	*f_mutex;
 	pthread_mutex_t	*s_mutex;
+	int				first_acquired;
+	int				second_acquired;
 
 	select_mutex(&f_mutex, &s_mutex, philo);
+	first_acquired = 0;
+	second_acquired = 0;
 	if (get_simulation_running(philo->args)
-		&& acquire_first_fork(philo, f_mutex))
-		return ;
-	if (get_simulation_running(philo->args)
-		&& acquire_second_fork(philo, f_mutex, s_mutex))
-		return ;
-	if (get_simulation_running(philo->args))
+		&& !acquire_first_fork(philo, f_mutex))
+		first_acquired = 1;
+	if (first_acquired && get_simulation_running(philo->args)
+		&& !acquire_second_fork(philo, f_mutex, s_mutex))
+		second_acquired = 1;
+	if (first_acquired && second_acquired
+		&& get_simulation_running(philo->args))
 		perform_eating(philo);
-	release_forks(philo, f_mutex, s_mutex);
+	if (first_acquired && second_acquired)
+		release_forks(philo, f_mutex, s_mutex);
 }

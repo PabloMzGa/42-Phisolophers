@@ -9,7 +9,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/philo.out", // Adjust this to match your output executable
-      "args": ["5", "800", "200", "200"], // Example arguments, adjust as needed
+      "args": ["1", "800", "200", "200"], // Example arguments, adjust as needed
 
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -36,7 +36,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/philo_bonus.out",
-      "args": [ "5", "200", "200", "200"], // Ajusta los argumentos según lo que necesites
+      "args": [ "1", "200", "200", "200"], // Ajusta los argumentos según lo que necesites
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
       "environment": [],

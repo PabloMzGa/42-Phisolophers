@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   clean_philo_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:45:01 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/08 14:01:46 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:27:10 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void	close_args_sems(t_args *args)
 		sem_close(args->stop_sem);
 	if (args->printf_sem && args->printf_sem != SEM_FAILED)
 		sem_close(args->printf_sem);
+	if (args->grabbing_forks_sem && args->grabbing_forks_sem != SEM_FAILED)
+		sem_close(args->grabbing_forks_sem);
 	if (args->n_eat > 0)
 	{
 		if (args->full_sem && args->full_sem != SEM_FAILED)

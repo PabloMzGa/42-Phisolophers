@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_start_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/08 13:59:48 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:02:26 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,9 @@ static int	start_and_join_behaviours(t_philo *philo)
 	if (pthread_create(&stop_monitor_id, NULL, stop_monitor, philo) != 0)
 		return (printf(RED "Error: Failed to create death stop monitor thread\n"
 				RESET), 1);
-	pthread_detach(stop_monitor_id);
-	pthread_detach(death_monitor_id);
 	pthread_join(behaviour_thread_id, NULL);
+	pthread_join(death_monitor_id, NULL);
+	pthread_join(stop_monitor_id, NULL);
 	return (0);
 }
 

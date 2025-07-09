@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_eat_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 18:11:04 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/08 13:39:40 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 13:36:07 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static int	handle_fork_pickup(t_philo *philo)
 		safe_sem_post(philo->args->forks_sem);
 		return (1);
 	}
-	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET GREEN " has taken a fork"
+	safe_log_printf("%10u " BOLD MAGENTA "%u" RESET GREEN " has taken a fork"
 		RESET "\n", philo->id, philo->args, philo);
 	return (0);
 }
@@ -54,7 +54,7 @@ static int	handle_fork_pickup(t_philo *philo)
  */
 static void	handle_eating(t_philo *philo)
 {
-	safe_log_printf("%10u" BOLD MAGENTA " %u" RESET YELLOW " is eating" RESET
+	safe_log_printf("%10u " BOLD MAGENTA "%u" RESET YELLOW " is eating" RESET
 		"\n", philo->id, philo->args, philo);
 	set_last_meal(philo, get_time_ms());
 	usleep_check(philo->args->time_eat * 1000, philo);
@@ -70,12 +70,14 @@ int	philo_eat(t_philo *philo)
 	get_local_stop(philo, &local_stop);
 	if (local_stop)
 		return (1);
+	safe_sem_wait(philo->args->grabbing_forks_sem);
 	if (handle_fork_pickup(philo))
-		return (1);
+		return (safe_sem_post(philo->args->grabbing_forks_sem), 1);
 	if (philo->args->philo_n == 1)
-		return (0);
+		return (safe_sem_post(philo->args->grabbing_forks_sem), 0);
 	if (handle_fork_pickup(philo))
-		return (1);
+		return (safe_sem_post(philo->args->grabbing_forks_sem), 1);
+	safe_sem_post(philo->args->grabbing_forks_sem);
 	handle_eating(philo);
 	return (0);
 }

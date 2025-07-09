@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers.h                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
+/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/06/26 12:16:46 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/09 12:58:42 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,13 +122,14 @@ int								check_philo_death(t_philo *philo);
 /**
  * @brief Handles the eating behavior of a philosopher.
  *
- * This function manages the process of a philosopher attempting to eat.
- * It selects the appropriate fork mutexes, checks if the simulation is
- * running, and tries to acquire both forks. If successful, the philosopher
- * performs the eating action. Regardless of the outcome, it ensures that
- * the forks are released at the end.
+ * This function manages the process by which a philosopher attempts to eat.
+ * It selects the appropriate mutexes (forks), tries to acquire them in order,
+ * and if successful, allows the philosopher to eat. After eating, it releases
+ * the acquired forks. The function also checks if the simulation is still
+ * running at each step to ensure proper synchronization and avoid deadlocks.
  *
- * @param philo Pointer to the philosopher structure.
+ * @param philo Pointer to the philosopher structure containing state and
+ *              arguments.
  */
 void							philosopher_eat(t_philo *philo);
 
