@@ -6,7 +6,7 @@
 /*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 12:58:42 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/09 16:23:08 by pabmart2         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -191,19 +191,19 @@ void							*philosopher_behaviour(void *args);
 /////////////////////////// PHILO BEHAVIOUR - UTILS ////////////////////////////
 
 /**
- * @brief Selects the order of mutexes to avoid deadlock.
+ * @brief Selects the order of mutexes (forks) for a philosopher to avoid
+ *        deadlocks.
  *
- * This function assigns the addresses of two mutexes associated with the
- * philosopher's previous and next forks to the provided pointers, ensuring
- * a consistent locking order based on their memory addresses. This helps
- * prevent deadlocks when multiple philosophers attempt to lock forks.
+ * This function determines which two fork mutexes a philosopher should
+ * attempt to lock first and second. For the special case of two
+ * philosophers, it delegates to select_mutex_2_philo(). For more than
+ * two philosophers, it orders the mutex pointers by their memory
+ * address to ensure a consistent locking order, which helps prevent
+ * deadlocks.
  *
- * @param[out] first_mutex  Pointer to store the address of the first mutex
- *                          to lock.
- * @param[out] second_mutex Pointer to store the address of the second mutex
- *                          to lock.
- * @param[in]  philo        Pointer to the philosopher structure containing
- *                          fork mutexes.
+ * @param first_mutex  Pointer to the first mutex to lock.
+ * @param second_mutex Pointer to the second mutex to lock.
+ * @param  philo        Pointer to the philosopher structure.
  */
 void							select_mutex(pthread_mutex_t **first_mutex,
 									pthread_mutex_t **second_mutex,
