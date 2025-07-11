@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   set_args_bonus.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/26 13:31:19 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 13:40:49 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/11 13:25:24 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ static int	set_sems(t_args *args)
 		return (sem_close(args->forks_sem), sem_close(args->printf_sem), 1);
 	sem_unlink("/stop_sem");
 	args->grabbing_forks_sem = sem_open("/grabbing_forks_sem", O_CREAT, 0644,
-			1);
+			args->philo_n / 2 + 1);
 	if (args->grabbing_forks_sem == SEM_FAILED)
 		return (sem_close(args->forks_sem), sem_close(args->printf_sem),
 			sem_close(args->stop_sem), 1);

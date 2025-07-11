@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philosophers_bonus.h                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 12:24:47 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 13:19:58 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/11 13:17:13 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,15 +151,14 @@ int					check_philo_death(t_philo *philo);
  * @brief Main loop for philosopher behavior in the dining philosophers
  *        problem.
  *
- * This function represents the main execution loop for a philosopher
- * thread/process. It repeatedly checks if the philosopher should stop,
- * attempts to eat, handles the case where only one fork is available,
- * manages semaphore limits, and performs sleeping and thinking actions.
- * The loop continues until a stop condition is met or an action
- * (eating, sleeping, or thinking) signals to break the loop.
+ * This function represents the core behavior of a philosopher thread/process.
+ * It repeatedly checks if the philosopher should stop, attempts to eat,
+ * handles the case of a lone fork, manages semaphore states, and performs
+ * sleeping/thinking actions. The loop continues until a stop condition is met
+ * or an action (eating, sleeping/thinking) returns a break signal.
  *
- * @param args Pointer to a t_philo structure containing philosopher state
- *        and arguments.
+ * @param args Pointer to a t_philo structure containing philosopher state and
+ *        arguments.
  * @return Always returns NULL.
  */
 void				*philo_behaviour_loop(void *args);

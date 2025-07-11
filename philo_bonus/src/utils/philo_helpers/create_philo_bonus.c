@@ -21,7 +21,7 @@ t_philo	*create_philo(unsigned int id, t_args *args)
 		return (NULL);
 	philo->id = id;
 	philo->n_eat = 0;
-	philo->last_meal_timestamp = get_time_ms();
+	philo->last_meal_timestamp = args->epoch;
 	philo->last_meal_sem = NULL;
 	philo->local_stop = 0;
 	philo->local_stop_sem = NULL;

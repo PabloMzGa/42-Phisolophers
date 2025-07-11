@@ -6,7 +6,7 @@
 /*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/24 16:26:47 by pabmart2          #+#    #+#             */
-/*   Updated: 2025/07/08 13:21:10 by pablo            ###   ########.fr       */
+/*   Updated: 2025/07/11 13:17:04 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ void	*philo_behaviour_loop(void *args)
 
 	philo = (t_philo *)args;
 	lone_fork = 0;
+	set_last_meal(philo, get_time_ms());
 	get_local_stop(philo, &local_stop);
 	while (!local_stop)
 	{

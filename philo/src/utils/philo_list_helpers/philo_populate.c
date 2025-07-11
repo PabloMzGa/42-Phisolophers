@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo_populate.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pabmart2 <pabmart2@student.42malaga.com    +#+  +:+       +#+        */
+/*   By: pablo <pablo@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/19 13:33:13 by pablo             #+#    #+#             */
-/*   Updated: 2025/07/09 16:14:34 by pabmart2         ###   ########.fr       */
+/*   Updated: 2025/07/11 12:02:04 by pablo            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_philo	*populate_philosophers(t_args *args)
 	tmp_philo2 = NULL;
 	if (!tmp_philo1)
 		return (NULL);
-	while (counter <= args->philo_n)
+	while (counter < args->philo_n)
 	{
 		++counter;
 		tmp_philo2 = create_philo(counter, args);
